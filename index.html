@@ -23,18 +23,18 @@
   --bg:#f6f5f1; --surface:#ffffff; --fg:#1d2420; --muted:#5d6862; --line:#dfe2dc;
   --accent:#2f6b4f; --accent-ink:#ffffff; --soil:#a8472a; --soil-soft:#f3e3dc;
   --warn:#8a5f00; --warn-soft:#fbf0d6; --grid:#e6e8e2;
-  --t-o:#a8472a; --t-v:#4f8a5b;
+  --t-o:#a8472a; --t-v:#4f8a5b; --me:#1a73e8; --me-ring:rgba(26,115,232,.18);
   --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#141816; --surface:#1c211f; --fg:#e7ebe8; --muted:#9aa49f; --line:#2e3532;
   --accent:#6fbf93; --accent-ink:#0f1a14; --soil:#e08562; --soil-soft:#3a2620;
-  --warn:#e6b84c; --warn-soft:#352b14; --grid:#232926; --t-o:#e08562; --t-v:#7cc08a; color-scheme:dark}}
+  --warn:#e6b84c; --warn-soft:#352b14; --grid:#232926; --t-o:#e08562; --t-v:#7cc08a; --me:#5b9cf0; --me-ring:rgba(91,156,240,.22); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#141816; --surface:#1c211f; --fg:#e7ebe8; --muted:#9aa49f; --line:#2e3532;
   --accent:#6fbf93; --accent-ink:#0f1a14; --soil:#e08562; --soil-soft:#3a2620;
-  --warn:#e6b84c; --warn-soft:#352b14; --grid:#232926; --t-o:#e08562; --t-v:#7cc08a; color-scheme:dark}
+  --warn:#e6b84c; --warn-soft:#352b14; --grid:#232926; --t-o:#e08562; --t-v:#7cc08a; --me:#5b9cf0; --me-ring:rgba(91,156,240,.22); color-scheme:dark}
 
 html,body{overflow-x:hidden}
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
@@ -141,6 +141,16 @@ footer p{margin:0}
 .leaflet-tooltip{position:absolute;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;white-space:nowrap;pointer-events:none;box-shadow:0 2px 6px rgb(0 0 0 / .15)}
 .wlabel{background:none;border:0;box-shadow:none;color:var(--muted);font-size:11px;font-weight:600;padding:0}
 .pinicon svg{display:block}
+.btn.loc{display:inline-flex;align-items:center;gap:6px}
+.btn.loc svg{width:18px;height:18px;flex:none}
+.btn.loc[aria-busy="true"]{opacity:.7}
+.meicon{background:none;border:0}
+.me{position:relative;width:20px;height:20px}
+.me i{position:absolute;inset:3px;border-radius:50%;background:var(--me);border:3px solid #fff;box-shadow:0 1px 4px rgb(0 0 0 / .35)}
+.me::before{content:"";position:absolute;inset:-10px;border-radius:50%;background:var(--me-ring);animation:mepulse 2s ease-out infinite}
+@keyframes mepulse{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.me::before{animation:none}}
+.msg .btn{margin-top:6px}
 
 @media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}.pick{grid-template-columns:minmax(0,1fr)}#map{height:46vh}}
 @media (prefers-reduced-motion:reduce){.leaflet-zoom-anim .leaflet-zoom-animated{transition:none}}
@@ -149,7 +159,7 @@ footer p{margin:0}
 <div class="wrap">
   <header>
     <h1>Giá đất quanh ghim</h1>
-    <p>Dán toạ độ Google Maps của vị trí bạn đang đứng (hoặc chạm vào bản đồ). App lấy các tin rao bán đất thật gần đó và tính giá/m² tham khảo.</p>
+    <p>Bấm <b>Vị trí của tôi</b> để xem giá ngay nơi bạn đứng, hoặc dán toạ độ Google Maps, hoặc chạm vào bản đồ. App lấy các tin rao bán đất thật gần đó và tính giá/m² tham khảo.</p>
     <div class="stamp"><span class="live">Dữ liệu thật</span><span><b id="nAll">0</b> tin rao bán đất</span><span>Cập nhật <b>07/11/2026</b></span><span>Nguồn: alonhadat.com.vn, muaban.net</span></div>
   </header>
 
@@ -171,7 +181,8 @@ footer p{margin:0}
   <div class="main">
     <section class="mapcard" aria-label="Bản đồ">
       <div class="maptools">
-        <input id="coordIn" type="text" placeholder="Dán toạ độ, vd 11.4300, 106.6560" aria-label="Toạ độ Google Maps">
+        <button class="btn loc" id="btnLoc" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Vị trí của tôi</button>
+        <input id="coordIn" type="text" placeholder="Hoặc dán toạ độ, vd 11.4300, 106.6560" aria-label="Toạ độ Google Maps">
         <button class="btn primary" id="btnAdd" type="button">Thả ghim</button>
       </div>
       <div class="hint msg" id="pasteMsg" role="status" hidden></div>
@@ -347,6 +358,56 @@ $("#btnAdd").onclick=()=>{
 $("#coordIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("#btnAdd").click()});
 sel.onchange=()=>{state.ward=WARDS.find(w=>w.id===sel.value);persist();map.setView([state.ward.lat,state.ward.lng],13);
   $("#pasteMsg").innerHTML=`Đã chuyển tới <b>${wardLabel(state.ward)}</b>. Chạm vào bản đồ hoặc dán toạ độ để thả ghim trong khu vực này.`;$("#pasteMsg").hidden=false};
+
+// ---------- Vị trí của tôi ----------
+const msgBox=$("#pasteMsg"), showMsg=h=>{msgBox.innerHTML=h;msgBox.hidden=false};
+let meMarker=null, meCircle=null, watchId=null, firstFix=true, lastFix=null;
+const inRegion=(la,ln)=>la>10.4&&la<12.6&&ln>105.8&&ln<108;
+function onFix(pos){
+  const la=pos.coords.latitude, ln=pos.coords.longitude, acc=Math.max(5,pos.coords.accuracy||0);
+  lastFix={lat:la,lng:ln,acc};
+  $("#btnLoc").removeAttribute("aria-busy");
+  if(!meMarker){
+    meMarker=L.marker([la,ln],{icon:L.divIcon({className:"meicon",html:'<div class="me"><i></i></div>',iconSize:[20,20],iconAnchor:[10,10]}),zIndexOffset:2000,keyboard:false}).bindTooltip("Vị trí của bạn").addTo(map);
+    meCircle=L.circle([la,ln],{radius:acc,color:css("--me"),weight:1,fillColor:css("--me"),fillOpacity:.12,interactive:false}).addTo(map);
+  } else { meMarker.setLatLng([la,ln]); meCircle.setLatLng([la,ln]).setRadius(acc); }
+  if(firstFix){
+    firstFix=false;
+    map.setView([la,ln],acc>1500?13:16);
+    const accTxt=`Sai số khoảng ±${fmtDist(acc)}`;
+    if(!inRegion(la,ln)){
+      showMsg(`<b>Đã thấy vị trí của bạn</b> (${accTxt}), nhưng nơi này nằm ngoài khu Bình Phước cũ nên app chưa có dữ liệu giá.`);
+    } else {
+      showMsg(`<b>Đã xác định vị trí của bạn</b> (${accTxt}).<br><button type="button" class="btn primary" id="btnHere">Xem giá tại vị trí này</button>`);
+      $("#btnHere").onclick=()=>{msgBox.hidden=true;addPin(lastFix.lat,lastFix.lng,false);map.setView([lastFix.lat,lastFix.lng],14);
+        setTimeout(()=>$("#resultCard").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}),150)};
+    }
+  }
+}
+function onErr(e){
+  $("#btnLoc").removeAttribute("aria-busy");
+  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}
+  firstFix=true;
+  if(e.code===1){
+    showMsg(`<b>Chưa được cấp quyền vị trí.</b> Cách bật:<ol>
+      <li><b>iPhone:</b> Cài đặt → Quyền riêng tư &amp; Bảo mật → Dịch vụ định vị → bật, rồi chọn Safari (hoặc Chrome) → "Khi dùng ứng dụng". Sau đó tải lại trang và bấm lại "Vị trí của tôi", chọn <b>Cho phép</b>.</li>
+      <li><b>Android / máy tính:</b> bấm biểu tượng ổ khoá cạnh địa chỉ trang → Quyền → Vị trí → Cho phép, rồi tải lại trang.</li></ol>
+      Nếu bạn đang xem app bên trong Claude, khung xem này không cho dùng vị trí: hãy mở link https://xuanlt120884-cmyk.github.io/gia-dat/ bằng trình duyệt.`);
+  } else if(e.code===3){
+    showMsg("Không lấy được vị trí trong thời gian chờ. Hãy ra chỗ thoáng hoặc bật Wi-Fi rồi bấm lại <b>Vị trí của tôi</b>.");
+  } else {
+    showMsg("Thiết bị chưa trả về vị trí. Kiểm tra đã bật định vị (GPS) rồi bấm lại <b>Vị trí của tôi</b>.");
+  }
+}
+$("#btnLoc").onclick=()=>{
+  msgBox.hidden=true;
+  if(!("geolocation" in navigator)){showMsg("Trình duyệt này không hỗ trợ định vị. Hãy dán toạ độ Google Maps thay thế.");return}
+  if(lastFix&&watchId!==null){firstFix=true;onFix({coords:{latitude:lastFix.lat,longitude:lastFix.lng,accuracy:lastFix.acc}});return}
+  $("#btnLoc").setAttribute("aria-busy","true");
+  showMsg("Đang xác định vị trí… Nếu trình duyệt hỏi, hãy chọn <b>Cho phép</b>.");
+  firstFix=true;
+  watchId=navigator.geolocation.watchPosition(onFix,onErr,{enableHighAccuracy:true,maximumAge:10000,timeout:20000});
+};
 
 // ---------- Chips loại đất ----------
 function drawChips(){
