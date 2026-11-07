@@ -303,7 +303,7 @@ function drawStatic(){
   lyData.clearLayers();
   DATA.forEach(d=>{
     const on=d.k===state.type, c=css(TYPES[d.k].color);
-    L.circleMarker([d.lat,d.lng],{radius:on?6:4,color:c,weight:on?1.5:1,fillColor:c,fillOpacity:on?.75:.25,opacity:on?1:.45})
+    L.circleMarker([d.lat,d.lng],{radius:on?7:5,color:c,weight:on?1.5:1,fillColor:c,fillOpacity:on?.75:.25,opacity:on?1:.45})
      .bindTooltip(`${esc(d.t)}<br>${fmtPpm(d.ppm)}/m² · ${nf0.format(d.a)} m² · ${fmtMoney(d.p)}`)
      .addTo(lyData);
   });
@@ -327,7 +327,7 @@ function addPin(lat,lng,fly){
   state.active=pins.length-1;
   const w=nearestWard({lat,lng}); state.ward=w; sel.value=w.id;
   persist(); refresh();
-  if(fly){ map.setView([lat,lng],13); }
+  if(fly){ if(circle) fitToCircle(); else map.setView([lat,lng],13); }
 }
 map.on("click",e=>{$("#pasteMsg").hidden=true;addPin(e.latlng.lat,e.latlng.lng,false)});
 
@@ -359,6 +359,8 @@ $("#coordIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("#btnAdd").cli
 sel.onchange=()=>{state.ward=WARDS.find(w=>w.id===sel.value);persist();map.setView([state.ward.lat,state.ward.lng],13);
   $("#pasteMsg").innerHTML=`Đã chuyển tới <b>${wardLabel(state.ward)}</b>. Chạm vào bản đồ hoặc dán toạ độ để thả ghim trong khu vực này.`;$("#pasteMsg").hidden=false};
 
+function fitToCircle(){ if(circle) map.fitBounds(circle.getBounds(),{padding:[16,16],maxZoom:16}); }
+
 // ---------- Vị trí của tôi ----------
 const msgBox=$("#pasteMsg"), showMsg=h=>{msgBox.innerHTML=h;msgBox.hidden=false};
 let meMarker=null, meCircle=null, watchId=null, firstFix=true, lastFix=null;
@@ -373,13 +375,17 @@ function onFix(pos){
   } else { meMarker.setLatLng([la,ln]); meCircle.setLatLng([la,ln]).setRadius(acc); }
   if(firstFix){
     firstFix=false;
-    map.setView([la,ln],acc>1500?13:16);
+    const near=DATA.map(d=>({d,dist:distM({lat:la,lng:ln},d)})).sort((a,b)=>a.dist-b.dist);
+    const top=near.slice(0,8);
+    if(top.length) map.fitBounds(L.latLngBounds([[la,ln],...top.map(x=>[x.d.lat,x.d.lng])]).pad(0.15),{maxZoom:15});
+    else map.setView([la,ln],15);
     const accTxt=`Sai số khoảng ±${fmtDist(acc)}`;
+    const nearTxt=top.length?` Tin rao gần nhất cách bạn khoảng <b>${fmtDist(top[0].dist)}</b>; bản đồ đã thu nhỏ để hiện ${top.length} tin gần nhất.`:"";
     if(!inRegion(la,ln)){
-      showMsg(`<b>Đã thấy vị trí của bạn</b> (${accTxt}), nhưng nơi này nằm ngoài khu Bình Phước cũ nên app chưa có dữ liệu giá.`);
+      showMsg(`<b>Đã thấy vị trí của bạn</b> (${accTxt}), nhưng nơi này nằm ngoài khu Bình Phước cũ nên app chưa có dữ liệu giá.${nearTxt}`);
     } else {
-      showMsg(`<b>Đã xác định vị trí của bạn</b> (${accTxt}).<br><button type="button" class="btn primary" id="btnHere">Xem giá tại vị trí này</button>`);
-      $("#btnHere").onclick=()=>{msgBox.hidden=true;addPin(lastFix.lat,lastFix.lng,false);map.setView([lastFix.lat,lastFix.lng],14);
+      showMsg(`<b>Đã xác định vị trí của bạn</b> (${accTxt}).${nearTxt}<br><button type="button" class="btn primary" id="btnHere">Xem giá tại vị trí này</button>`);
+      $("#btnHere").onclick=()=>{msgBox.hidden=true;addPin(lastFix.lat,lastFix.lng,false);fitToCircle();
         setTimeout(()=>$("#resultCard").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}),150)};
     }
   }
