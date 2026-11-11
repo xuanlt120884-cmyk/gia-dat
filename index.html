@@ -490,8 +490,11 @@ function renderCoverage(){
 }
 const FORM_PREFILL = "https://docs.google.com/forms/d/e/1FAIpQLScZxbGK0PeJKHOu4CEm0_CMphnRTAIofuCiuPLWxQymhnc0PQ/viewform?usp=pp_url&entry.1503623532=XAPHUONG&entry.1651322764=TOADO";
 function renderPost(){
-  const el=$("#postBox"), p=pins[state.active];
+  let el=$("#postBox"); const p=pins[state.active];
+  if(!el){el=document.createElement("div");el.className="postbox";el.id="postBox";}
   if(!p||!FORM_PREFILL){el.hidden=true;el.innerHTML="";return}
+  const anchor=$("#result .est")||$("#result .stats");
+  if(anchor) anchor.after(el); else $("#result").appendChild(el);
   const w=nearestWard(p), toado=p.lat.toFixed(6)+", "+p.lng.toFixed(6);
   const url=FORM_PREFILL.replace("TOADO",encodeURIComponent(toado)).replace("XAPHUONG",encodeURIComponent(wardLabel(w)));
   el.innerHTML=`<a class="btn primary" href="${url}" target="_blank" rel="noopener">Đăng thêm tin giá đất khu vực này</a><br>Biết giá đất quanh ghim này? Gửi giúp để bản đồ chính xác hơn. Không cần ghi tên hay số điện thoại. Tin được duyệt và đưa lên mỗi tuần.`;
