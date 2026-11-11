@@ -94,6 +94,8 @@ select:focus-visible,input:focus-visible,button:focus-visible,a:focus-visible,.p
 .scale{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
 .empty{color:var(--muted);font-size:.92rem;margin:0}
 .warnbox{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:8px 10px;font-size:.86rem}
+.postbox{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:.86rem;color:var(--muted)}
+.postbox .btn{display:inline-block;text-decoration:none;margin-bottom:6px}
 .est{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;align-items:center}
 .est label{font-size:.86rem}
 .est output{font-family:var(--f-mono);font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
@@ -209,6 +211,7 @@ footer p{margin:0}
       <section class="card" aria-labelledby="hResult" id="resultCard">
         <h2 id="hResult">Giá tham khảo</h2>
         <div id="result"></div>
+        <div class="postbox" id="postBox" hidden></div>
       </section>
 
       <section class="card" aria-labelledby="hPins">
@@ -485,7 +488,16 @@ function renderCoverage(){
   $("#cov").innerHTML=rows.filter(r=>r.n).map(r=>`<span>${wardLabel(r.w)}</span><span>${r.n} tin</span>`).join("")
     +`<span style="grid-column:1/-1;color:var(--muted);margin-top:4px">Chưa có tin: ${rows.filter(r=>!r.n).map(r=>r.w.name).join(", ")}.</span>`;
 }
-function refresh(){renderResult();renderPins()}
+const FORM_PREFILL = "https://docs.google.com/forms/d/e/1FAIpQLScZxbGK0PeJKHOu4CEm0_CMphnRTAIofuCiuPLWxQymhnc0PQ/viewform?usp=pp_url&entry.1503623532=XAPHUONG&entry.1651322764=TOADO";
+function renderPost(){
+  const el=$("#postBox"), p=pins[state.active];
+  if(!p||!FORM_PREFILL){el.hidden=true;el.innerHTML="";return}
+  const w=nearestWard(p), toado=p.lat.toFixed(6)+", "+p.lng.toFixed(6);
+  const url=FORM_PREFILL.replace("TOADO",encodeURIComponent(toado)).replace("XAPHUONG",encodeURIComponent(wardLabel(w)));
+  el.innerHTML=`<a class="btn primary" href="${url}" target="_blank" rel="noopener">Đăng thêm tin giá đất khu vực này</a><br>Biết giá đất quanh ghim này? Gửi giúp để bản đồ chính xác hơn. Không cần ghi tên hay số điện thoại. Tin được duyệt và đưa lên mỗi tuần.`;
+  el.hidden=false;
+}
+function refresh(){renderResult();renderPost();renderPins()}
 
 drawChips(); drawStatic(); renderCoverage(); refresh();
 const re=()=>{drawStatic();refresh()};
