@@ -15,115 +15,201 @@
 <body>
 <title>Giá Đất Quanh Ghim</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: công cụ tra giá — chọn khu vực, thả ghim, đọc giá. Bản đồ trái, kết quả phải; xếp chồng trên điện thoại.
-   Màu: xanh vườn cao su/điều + đỏ đất bazan Bình Phước. */
+/* Giá Đất Quanh Ghim — giao diện "máy đo": nền yên tĩnh, một bảng đọc giá đậm màu rừng cao su là điểm nhấn duy nhất.
+   Màu: lá cao su (xanh), đất bazan (đỏ), sương sớm (nền xám xanh). Một họ chữ: Be Vietnam Pro, số dạng bảng. */
 :root{
-  --bg:#f6f5f1; --surface:#ffffff; --fg:#1d2420; --muted:#5d6862; --line:#dfe2dc;
-  --accent:#2f6b4f; --accent-ink:#ffffff; --soil:#a8472a; --soil-soft:#f3e3dc;
-  --warn:#8a5f00; --warn-soft:#fbf0d6; --grid:#e6e8e2;
-  --t-o:#a8472a; --t-v:#4f8a5b; --me:#1a73e8; --me-ring:rgba(26,115,232,.18);
-  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --bg:#eef1ed; --surface:#ffffff; --raised:#f6f8f5; --ink:#10261f; --fg:#1b2a24; --muted:#5d6c65; --faint:#8a978f;
+  --line:#dbe1db; --line-strong:#c6cfc7;
+  --leaf:#1f6b4e; --leaf-ink:#ffffff; --leaf-soft:#e2efe8;
+  --soil:#b5401f; --soil-soft:#f6e4dc;
+  --panel:#133a2d; --panel-2:#1a4636; --panel-fg:#eaf3ee; --panel-muted:#a9c3b6; --panel-line:rgba(234,243,238,.16);
+  --warn:#7a5300; --warn-soft:#fbf1d9;
+  --t-o:#b5401f; --t-v:#3f8a5c; --me:#1a73e8; --me-ring:rgba(26,115,232,.18);
+  --shadow:0 1px 2px rgba(16,38,31,.06),0 8px 24px -12px rgba(16,38,31,.18);
+  --r-lg:16px; --r-md:10px; --r-sm:7px;
+  --tile-filter:grayscale(.55) saturate(.8) contrast(.96) brightness(1.04);
+  --f:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141816; --surface:#1c211f; --fg:#e7ebe8; --muted:#9aa49f; --line:#2e3532;
-  --accent:#6fbf93; --accent-ink:#0f1a14; --soil:#e08562; --soil-soft:#3a2620;
-  --warn:#e6b84c; --warn-soft:#352b14; --grid:#232926; --t-o:#e08562; --t-v:#7cc08a; --me:#5b9cf0; --me-ring:rgba(91,156,240,.22); color-scheme:dark}}
+  --bg:#0f1513; --surface:#161e1b; --raised:#1b2521; --ink:#eef4f0; --fg:#dfe7e2; --muted:#9aaba2; --faint:#73847b;
+  --line:#26312d; --line-strong:#34413b;
+  --leaf:#6cc49a; --leaf-ink:#0b1a13; --leaf-soft:#1b3328;
+  --soil:#ec8a66; --soil-soft:#3b231b;
+  --panel:#163f31; --panel-2:#1c4a3a; --panel-fg:#eaf3ee; --panel-muted:#a9c3b6; --panel-line:rgba(234,243,238,.14);
+  --warn:#e7bd5a; --warn-soft:#30280f;
+  --t-o:#ec8a66; --t-v:#7cc799; --me:#5b9cf0; --me-ring:rgba(91,156,240,.22);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.6);
+  --tile-filter:grayscale(.6) invert(1) hue-rotate(180deg) brightness(.82) contrast(.9);
+  color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#141816; --surface:#1c211f; --fg:#e7ebe8; --muted:#9aa49f; --line:#2e3532;
-  --accent:#6fbf93; --accent-ink:#0f1a14; --soil:#e08562; --soil-soft:#3a2620;
-  --warn:#e6b84c; --warn-soft:#352b14; --grid:#232926; --t-o:#e08562; --t-v:#7cc08a; --me:#5b9cf0; --me-ring:rgba(91,156,240,.22); color-scheme:dark}
+  --bg:#0f1513; --surface:#161e1b; --raised:#1b2521; --ink:#eef4f0; --fg:#dfe7e2; --muted:#9aaba2; --faint:#73847b;
+  --line:#26312d; --line-strong:#34413b;
+  --leaf:#6cc49a; --leaf-ink:#0b1a13; --leaf-soft:#1b3328;
+  --soil:#ec8a66; --soil-soft:#3b231b;
+  --panel:#163f31; --panel-2:#1c4a3a; --panel-fg:#eaf3ee; --panel-muted:#a9c3b6; --panel-line:rgba(234,243,238,.14);
+  --warn:#e7bd5a; --warn-soft:#30280f;
+  --t-o:#ec8a66; --t-v:#7cc799; --me:#5b9cf0; --me-ring:rgba(91,156,240,.22);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.6);
+  --tile-filter:grayscale(.6) invert(1) hue-rotate(180deg) brightness(.82) contrast(.9);
+  color-scheme:dark}
 
-html,body{overflow-x:hidden}
-body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
-.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 32px;display:grid;gap:14px}
-header{display:grid;gap:6px}
-header h1{font-size:1.45rem;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:-.01em}
-header p{margin:0;color:var(--muted);max-width:68ch}
-.stamp{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.82rem;color:var(--muted)}
-.stamp b{color:var(--fg);font-variant-numeric:tabular-nums}
-.live{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--accent)}
-.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
-
-.pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
-.field{display:grid;gap:4px;min-width:0}
-.field label{font-size:.74rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.step{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:.7rem;margin-right:4px;letter-spacing:0}
+html,body{overflow-x:clip}
+body{background:var(--bg);color:var(--fg);font-family:var(--f);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+a{color:var(--leaf);text-underline-offset:2px}
 select,input,button{font:inherit;color:inherit}
 select,input{font-size:16px}
-select,input[type=text],input[type=number]{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
-select:focus-visible,input:focus-visible,button:focus-visible,a:focus-visible,.pin:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 
-.main{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}
-.mapcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:grid}
-.maptools{display:flex;gap:8px;padding:10px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
-.maptools input{flex:1 1 220px}
-.btn{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600;white-space:nowrap}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-#map{height:min(58vh,540px);min-height:300px;background-color:var(--bg);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px}
-.hint{padding:9px 12px;font-size:.86rem;color:var(--muted);border-top:1px solid var(--line);line-height:1.5}
-.hint b{color:var(--fg)}
-.msg{background:var(--warn-soft);color:var(--warn);border-top:0;border-bottom:1px solid var(--line)}
-.msg b{color:inherit}
-.msg ol{margin:4px 0 0;padding-left:20px}
-.legend{display:flex;flex-wrap:wrap;gap:4px 14px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:0 40px}
 
+/* Thanh trên cùng */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding:18px 0 14px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:700;font-size:1.02rem;letter-spacing:-.01em}
+.brand svg{width:30px;height:30px;flex:none}
+.status{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;font-size:.84rem;color:var(--muted)}
+.status b{color:var(--fg);font-weight:600}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--leaf);font-weight:600}
+.live::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px var(--leaf-soft)}
+
+/* Mở đầu */
+.intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px 48px;align-items:end;padding:30px 0 22px}
+.intro h1{margin:0;font-size:clamp(1.9rem,3.6vw,2.75rem);line-height:1.08;letter-spacing:-.035em;font-weight:700;color:var(--ink);text-wrap:balance;max-width:19ch}
+.intro p{margin:0;color:var(--muted);max-width:52ch;font-size:1rem}
+
+/* Bộ chọn khu vực + thanh công cụ */
+.controls{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:8px;box-shadow:var(--shadow);margin-bottom:16px}
+.scope{display:flex;align-items:center;gap:10px;padding:0 6px 0 10px;border-right:1px solid var(--line);min-width:0}
+.scope .where{font-size:.8rem;color:var(--muted);line-height:1.3;white-space:nowrap}
+.scope .where b{display:block;color:var(--fg);font-weight:600;font-size:.88rem}
+.scope select{border:1px solid var(--line);background:var(--raised);border-radius:var(--r-md);padding:9px 34px 9px 12px;font-weight:600;font-size:.95rem;min-width:0;max-width:280px;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%235d6c65' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.tools{display:flex;gap:8px;min-width:0}
+.coord{flex:1 1 auto;display:flex;align-items:center;gap:8px;min-width:0;border:1px solid var(--line);background:var(--raised);border-radius:var(--r-md);padding:0 6px 0 12px}
+.coord:focus-within{border-color:var(--leaf);box-shadow:0 0 0 3px var(--leaf-soft)}
+.coord svg{width:16px;height:16px;flex:none;color:var(--faint)}
+.coord input{flex:1;min-width:0;border:0;background:none;padding:10px 0;outline:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r-md);padding:10px 16px;cursor:pointer;font-weight:600;font-size:.92rem;white-space:nowrap;text-decoration:none;color:var(--fg);transition:background-color .15s,border-color .15s}
+.btn:hover{background:var(--raised)}
+.btn svg{width:17px;height:17px;flex:none}
+.btn.primary{background:var(--leaf);border-color:var(--leaf);color:var(--leaf-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.coord .btn{padding:7px 14px}
+.btn.loc[aria-busy="true"]{opacity:.65;cursor:progress}
+
+/* Lưới chính */
+.main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(360px,1fr);gap:16px;align-items:start}
+.mapcard{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);display:grid}
+#map{height:calc(100vh - 150px);min-height:420px;max-height:760px;background-color:var(--raised);
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px}
+.mapfoot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px;padding:10px 14px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.notice{padding:11px 14px;font-size:.88rem;line-height:1.5;background:var(--warn-soft);color:var(--warn);border-bottom:1px solid var(--line)}
+.notice b{color:inherit}
+.notice ol{margin:4px 0 0;padding-left:20px}
+.notice .btn{margin-top:8px}
+.notice.tile{border-bottom:0;border-top:1px solid var(--line)}
+details.howto{border-top:1px solid var(--line);font-size:.86rem;color:var(--muted)}
+details.howto summary{cursor:pointer;padding:10px 14px;font-weight:600;color:var(--fg);list-style:none;display:flex;align-items:center;gap:8px}
+details.howto summary::-webkit-details-marker{display:none}
+details.howto summary::before{content:"";width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .15s}
+details.howto[open] summary::before{transform:rotate(45deg)}
+details.howto .body{padding:0 14px 12px 29px}
+details.howto ol{margin:0;padding-left:18px}
+details.howto p{margin:6px 0 0}
+
+/* Cột kết quả */
 .panel{display:grid;gap:12px;min-width:0}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;min-width:0}
-.card h2{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:.86rem}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+#result{display:grid;gap:12px;min-width:0}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md)}
+.seg button{display:flex;align-items:center;justify-content:center;gap:2px;border:0;background:none;border-radius:7px;padding:9px 10px;cursor:pointer;font-size:.88rem;font-weight:500;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--raised);color:var(--ink);font-weight:600;box-shadow:inset 0 0 0 1px var(--line-strong)}
 
-.big{font-size:2.1rem;font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.big small{font-size:.95rem;font-weight:500;color:var(--muted);letter-spacing:0}
-.sub{color:var(--muted);font-size:.85rem;margin-top:5px}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.stat{border-top:1px solid var(--line);padding-top:6px;min-width:0}
-.stat span{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.stat b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:1rem}
-.bar{position:relative;height:30px;margin-top:4px}
-.bar .track{position:absolute;top:13px;left:0;right:0;height:4px;background:var(--line);border-radius:2px}
-.bar .iqr{position:absolute;top:9px;height:12px;background:var(--soil-soft);border:1px solid var(--soil);border-radius:3px}
-.bar .med{position:absolute;top:4px;width:3px;height:22px;background:var(--soil);border-radius:2px;transform:translateX(-1px)}
-.bar .tick{position:absolute;top:12px;width:2px;height:6px;background:var(--muted);opacity:.55}
-.scale{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.readout{background:var(--panel);color:var(--panel-fg);border-radius:var(--r-lg);padding:20px 20px 18px;display:grid;gap:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.readout::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 23px,var(--panel-line) 23px 24px);mask:linear-gradient(180deg,#000 0,transparent 26px);-webkit-mask:linear-gradient(180deg,#000 0,transparent 26px);opacity:.7}
+.readout .where{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.84rem;color:var(--panel-muted)}
+.readout .where b{color:var(--panel-fg);font-weight:600}
+.readout .label{font-size:.88rem;color:var(--panel-muted);margin:0 0 4px}
+.big{font-size:clamp(2.9rem,6vw,3.6rem);font-weight:700;line-height:.95;letter-spacing:-.045em;color:#fff}
+.big small{font-size:1rem;font-weight:500;letter-spacing:0;color:var(--panel-muted);margin-left:6px}
+.basis{font-size:.84rem;color:var(--panel-muted);margin-top:8px}
+.basis.thin{color:#f4c9a8}
+.ruler{position:relative;height:38px}
+.ruler .track{position:absolute;left:0;right:0;top:17px;height:2px;background:var(--panel-line)}
+.ruler .tick{position:absolute;top:12px;width:1.5px;height:12px;background:var(--panel-muted);opacity:.55;transform:translateX(-.75px)}
+.ruler .iqr{position:absolute;top:9px;height:18px;border-radius:4px;background:rgba(236,138,102,.28);box-shadow:inset 0 0 0 1px rgba(236,138,102,.7)}
+.ruler .med{position:absolute;top:2px;width:3px;height:32px;border-radius:2px;background:#f29a77;transform:translateX(-1.5px)}
+.scale{display:flex;justify-content:space-between;font-size:.78rem;color:var(--panel-muted);margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--panel-line);padding-top:12px;gap:8px}
+.stat span{display:block;font-size:.78rem;color:var(--panel-muted)}
+.stat b{font-size:1.06rem;font-weight:600;color:var(--panel-fg)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;display:grid;gap:12px;min-width:0}
+.card h2{margin:0;font-size:1rem;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+.card .lede{margin:-6px 0 0;font-size:.86rem;color:var(--muted)}
 .empty{color:var(--muted);font-size:.92rem;margin:0}
-.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:8px 10px;font-size:.86rem}
-.postbox{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:.86rem;color:var(--muted)}
-.postbox .btn{display:inline-block;text-decoration:none;margin-bottom:6px}
-.est{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;align-items:center}
-.est label{font-size:.86rem}
-.est output{font-family:var(--f-mono);font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
-.est input{grid-column:1 / -1}
+.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:var(--r-md);padding:10px 12px;font-size:.86rem;line-height:1.5}
+.warnbox b{color:inherit}
 
-.list{display:grid;max-height:420px;overflow:auto;margin:0 -14px -14px;border-top:1px solid var(--line)}
-.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.est{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px}
+.est label{font-size:.9rem;font-weight:600;color:var(--ink)}
+.est .unit{display:flex;align-items:center;border:1px solid var(--line);background:var(--raised);border-radius:var(--r-md);padding-right:12px;grid-column:1}
+.est .unit:focus-within{border-color:var(--leaf);box-shadow:0 0 0 3px var(--leaf-soft)}
+.est input{width:100%;min-width:0;border:0;background:none;padding:10px 12px;outline:none}
+.est .unit span{color:var(--faint);font-size:.88rem}
+.est output{grid-column:2;grid-row:1 / span 2;text-align:right;font-size:1.25rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;white-space:nowrap}
+.est output small{display:block;font-size:.76rem;font-weight:500;color:var(--muted);letter-spacing:0}
+
+.postbox{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:start;background:var(--leaf-soft);border:1px solid color-mix(in srgb,var(--leaf) 22%,transparent);border-radius:var(--r-lg);padding:14px 16px}
+.postbox .ico{grid-row:1 / span 3;width:36px;height:36px;border-radius:10px;background:var(--leaf);color:var(--leaf-ink);display:grid;place-items:center}
+.postbox .ico svg{width:19px;height:19px}
+.postbox h3{margin:0;font-size:.96rem;font-weight:600;color:var(--ink)}
+.postbox p{margin:0;font-size:.86rem;color:var(--muted)}
+.postbox .btn{justify-self:start;margin-top:8px}
+
+.listhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.listhead span{font-size:.84rem;color:var(--muted)}
+.list{display:grid;max-height:460px;overflow:auto;margin:0 -16px -16px;border-top:1px solid var(--line);overscroll-behavior:contain}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 14px;padding:12px 16px;border-bottom:1px solid var(--line)}
 .item:last-child{border-bottom:0}
-.item .t{font-weight:600;font-size:.9rem;min-width:0}
-.item .m{font-size:.78rem;color:var(--muted);min-width:0}
-.item .p{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;font-size:.9rem;white-space:nowrap}
-.item a{font-size:.8rem}
-.pins{display:grid;gap:6px}
-.pin{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:.86rem;cursor:pointer;background:var(--bg)}
-.pin[aria-current="true"]{border-color:var(--soil)}
-.pin .c{font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
-.pin button{border:0;background:none;color:var(--muted);cursor:pointer;padding:2px 8px;font-size:1.1rem}
-a{color:var(--accent)}
-.cov{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:.84rem}
-.cov span:nth-child(even){font-family:var(--f-mono);text-align:right;color:var(--muted)}
-details summary{cursor:pointer;font-weight:600;font-size:.88rem}
-footer{font-size:.8rem;color:var(--muted);max-width:80ch;display:grid;gap:6px}
-footer p{margin:0}
+.item:hover{background:var(--raised)}
+.item .t{font-weight:600;font-size:.92rem;color:var(--ink);min-width:0;line-height:1.35}
+.item .p{text-align:right;font-weight:700;font-size:.95rem;color:var(--soil);white-space:nowrap}
+.item .m{font-size:.8rem;color:var(--muted);min-width:0}
+.item .s{font-size:.8rem;text-align:right;color:var(--faint);white-space:nowrap}
+.item .s a{font-weight:600}
+
+.pins{display:flex;flex-wrap:wrap;gap:8px}
+.pin{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 6px 5px 12px;font-size:.85rem;cursor:pointer;background:var(--raised)}
+.pin[aria-current="true"]{border-color:var(--soil);background:var(--soil-soft)}
+.pin .c{color:var(--muted);font-size:.8rem}
+.pin button{border:0;background:none;color:var(--muted);cursor:pointer;width:24px;height:24px;border-radius:50%;font-size:1rem;line-height:1}
+.pin button:hover{background:var(--line)}
+.pinlink{font-size:.86rem;font-weight:600}
+
+/* Độ phủ */
+.cov-wrap{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px}
+.cov-wrap header{display:flex;justify-content:space-between;align-items:end;gap:10px 30px;flex-wrap:wrap;margin-bottom:16px}
+.cov-wrap h2{margin:0;font-size:1.2rem;letter-spacing:-.02em;color:var(--ink)}
+.cov-wrap header p{margin:0;color:var(--muted);font-size:.9rem;max-width:56ch}
+.cov{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 36px}
+.cov .r{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr) 3rem;align-items:center;gap:12px;font-size:.88rem;padding:3px 0}
+.cov .r i{display:block;height:8px;border-radius:4px;background:var(--leaf);opacity:.85;min-width:3px}
+.cov .r b{text-align:right;font-weight:600;color:var(--ink)}
+.cov .none{grid-column:1 / -1;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:.86rem;color:var(--muted)}
+
+footer{margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 40px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padding-top:20px}
+footer p{margin:0;max-width:66ch}
+footer b{color:var(--fg)}
 
 /* Leaflet (rút gọn, nhúng trực tiếp) */
 .leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-layer{position:absolute;left:0;top:0}
-.leaflet-container{overflow:hidden;-webkit-tap-highlight-color:transparent;font-family:var(--f-body)}
+.leaflet-container{overflow:hidden;-webkit-tap-highlight-color:transparent;font-family:var(--f)}
 .leaflet-tile{visibility:hidden;user-select:none}.leaflet-tile-loaded{visibility:inherit}
+.leaflet-tile-pane{filter:var(--tile-filter)}
 .leaflet-container img.leaflet-tile{max-width:none!important;max-height:none!important;width:256px;height:256px}
 .leaflet-touch-zoom{touch-action:pan-x pan-y}.leaflet-touch-drag{touch-action:none}.leaflet-touch-drag.leaflet-touch-zoom{touch-action:none}
 .leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}
@@ -134,109 +220,124 @@ footer p{margin:0}
 .leaflet-control{position:relative;z-index:800;pointer-events:auto;float:left;clear:both}
 .leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}
 .leaflet-top{top:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-right{right:0}
-.leaflet-left .leaflet-control{margin-left:10px}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-right .leaflet-control{float:right}
-.leaflet-bar{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
-.leaflet-bar a{display:block;width:34px;height:34px;line-height:34px;text-align:center;text-decoration:none;color:var(--fg);font-size:18px;font-weight:600}
+.leaflet-left .leaflet-control{margin-left:12px}.leaflet-top .leaflet-control{margin-top:12px}.leaflet-right .leaflet-control{float:right}
+.leaflet-bar{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.leaflet-bar a{display:block;width:36px;height:36px;line-height:36px;text-align:center;text-decoration:none;color:var(--fg);font-size:18px;font-weight:500}
+.leaflet-bar a:hover{background:var(--raised)}
 .leaflet-bar a+a{border-top:1px solid var(--line)}
-.leaflet-control-attribution{background:var(--surface);color:var(--muted);font-size:10px;padding:0 5px;opacity:.9}
-.leaflet-control-attribution a{color:var(--muted)}
-.leaflet-tooltip{position:absolute;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;white-space:nowrap;pointer-events:none;box-shadow:0 2px 6px rgb(0 0 0 / .15)}
-.wlabel{background:none;border:0;box-shadow:none;color:var(--muted);font-size:11px;font-weight:600;padding:0}
-.pinicon svg{display:block}
-.btn.loc{display:inline-flex;align-items:center;gap:6px}
-.btn.loc svg{width:18px;height:18px;flex:none}
-.btn.loc[aria-busy="true"]{opacity:.7}
+.leaflet-control-attribution{background:var(--surface);color:var(--faint);font-size:10px;padding:1px 6px;opacity:.92;border-top-left-radius:6px}
+.leaflet-control-attribution a{color:var(--faint)}
+.leaflet-tooltip{position:absolute;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12px;line-height:1.4;white-space:nowrap;pointer-events:none;box-shadow:var(--shadow)}
+.wlabel{background:none;border:0;box-shadow:none;color:var(--muted);font-size:11px;font-weight:600;padding:0;text-shadow:0 0 3px var(--surface),0 0 3px var(--surface)}
+.pinicon svg{display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
 .meicon{background:none;border:0}
 .me{position:relative;width:20px;height:20px}
 .me i{position:absolute;inset:3px;border-radius:50%;background:var(--me);border:3px solid #fff;box-shadow:0 1px 4px rgb(0 0 0 / .35)}
 .me::before{content:"";position:absolute;inset:-10px;border-radius:50%;background:var(--me-ring);animation:mepulse 2s ease-out infinite}
 @keyframes mepulse{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.4);opacity:0}}
-@media (prefers-reduced-motion:reduce){.me::before{animation:none}}
-.msg .btn{margin-top:6px}
 
-@media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}.pick{grid-template-columns:minmax(0,1fr)}#map{height:46vh}}
-@media (prefers-reduced-motion:reduce){.leaflet-zoom-anim .leaflet-zoom-animated{transition:none}}
+/* Chuyển động duy nhất: con số giá hiện lên khi có kết quả mới */
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.big{animation:rise .35s ease-out}
+@media (prefers-reduced-motion:reduce){.me::before,.big{animation:none}.leaflet-zoom-anim .leaflet-zoom-animated{transition:none}}
+
+@media (max-width:980px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  .mapcard{position:static}
+  #map{height:52vh;min-height:320px}
+  .intro{grid-template-columns:minmax(0,1fr);padding:24px 0 18px}
+  .controls{grid-template-columns:minmax(0,1fr)}
+  .scope{border-right:0;border-bottom:1px solid var(--line);padding:4px 4px 10px}
+  .scope select{max-width:none;flex:1}
+  .cov{grid-template-columns:minmax(0,1fr)}
+  footer{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){
+  .wrap{padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .tools{flex-wrap:wrap}
+  .tools .loc{flex:1 1 100%}
+  .coord{flex:1 1 100%}
+  .scope .where{display:none}
+  .status .src{display:none}
+  .readout{padding:18px 16px 16px}
+  .cov .r{grid-template-columns:minmax(0,8.5rem) minmax(0,1fr) 2.6rem}
+}
 </style>
 
 <div class="wrap">
-  <header>
-    <h1>Giá đất quanh ghim</h1>
-    <p>Bấm <b>Vị trí của tôi</b> để xem giá ngay nơi bạn đứng, hoặc dán toạ độ Google Maps, hoặc chạm vào bản đồ. App lấy các tin rao bán đất thật gần đó và tính giá/m² tham khảo.</p>
-    <div class="stamp"><span class="live">Dữ liệu thật</span><span><b id="nAll">0</b> tin rao bán đất</span><span>Cập nhật <b>07/11/2026</b></span><span>Nguồn: alonhadat.com.vn, muaban.net</span></div>
-  </header>
+  <div class="top">
+    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2.5" y="6.5" width="27" height="23" rx="6" fill="none" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="3 3"/><path d="M16 3c-4.4 0-8 3.4-8 7.7 0 5.7 8 13.8 8 13.8s8-8.1 8-13.8C24 6.4 20.4 3 16 3z" fill="var(--soil)"/><circle cx="16" cy="10.6" r="3" fill="#fff"/></svg>Giá đất quanh ghim</div>
+    <div class="status"><span class="live">Dữ liệu thật</span><span><b id="nAll">0</b> tin rao bán đất</span><span>Cập nhật <b>09/11/2026</b></span><span class="src">Nguồn: alonhadat.com.vn, muaban.net</span></div>
+  </div>
 
-  <section class="pick" aria-label="Chọn khu vực">
-    <div class="field">
-      <label for="selCity"><span class="step">1</span>Tỉnh / Thành phố</label>
-      <select id="selCity"><option>TP. Đồng Nai</option></select>
+  <section class="intro">
+    <h1>Đất quanh đây đang rao bao nhiêu một mét vuông?</h1>
+    <p>Thả ghim ở nơi bạn quan tâm. App gom các tin rao bán đất thật gần đó và tính giá/m² tham khảo cho khu Bình Phước cũ, nay thuộc TP. Đồng Nai.</p>
+  </section>
+
+  <section class="controls" aria-label="Chọn vị trí">
+    <div class="scope">
+      <div class="where">TP. Đồng Nai<b>Bình Phước (cũ)</b></div>
+      <select id="selWard" aria-label="Xã / phường"></select>
     </div>
-    <div class="field">
-      <label for="selRegion"><span class="step">2</span>Khu vực</label>
-      <select id="selRegion"><option>Bình Phước (cũ) · 40 xã/phường</option><option disabled>Đồng Nai (cũ) · sắp có</option></select>
-    </div>
-    <div class="field">
-      <label for="selWard"><span class="step">3</span>Xã / Phường</label>
-      <select id="selWard"></select>
+    <div class="tools">
+      <button class="btn loc" id="btnLoc" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5" fill="currentColor"/><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Vị trí của tôi</button>
+      <label class="coord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c-3.9 0-7 3-7 6.8 0 5 7 12.2 7 12.2s7-7.2 7-12.2c0-3.8-3.1-6.8-7-6.8z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.3" r="2.4" fill="currentColor"/></svg>
+        <input id="coordIn" type="text" placeholder="Dán toạ độ Google Maps, vd 11.4300, 106.6560" aria-label="Toạ độ Google Maps">
+        <button class="btn primary" id="btnAdd" type="button">Thả ghim</button></label>
     </div>
   </section>
 
   <div class="main">
     <section class="mapcard" aria-label="Bản đồ">
-      <div class="maptools">
-        <button class="btn loc" id="btnLoc" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Vị trí của tôi</button>
-        <input id="coordIn" type="text" placeholder="Hoặc dán toạ độ, vd 11.4300, 106.6560" aria-label="Toạ độ Google Maps">
-        <button class="btn primary" id="btnAdd" type="button">Thả ghim</button>
-      </div>
-      <div class="hint msg" id="pasteMsg" role="status" hidden></div>
+      <div class="notice" id="pasteMsg" role="status" hidden></div>
       <div id="map" role="application" aria-label="Bản đồ, chạm để thả ghim"></div>
-      <div class="hint legend"><span><i class="dot" style="background:var(--t-o)"></i>Lô đất ở (≤ 700 m²)</span><span><i class="dot" style="background:var(--t-v)"></i>Đất vườn, diện tích lớn</span></div>
-      <div class="hint" id="tileNote" hidden>Bản đồ nền đường xá không tải được trong khung xem này, chỉ hiện lưới và tên xã/phường. Ghim, tin rao và giá vẫn hoạt động bình thường.</div>
-      <details class="hint">
+      <div class="notice tile" id="tileNote" hidden>Bản đồ nền không tải được trong khung xem này, chỉ hiện lưới và tên xã/phường. Ghim, tin rao và giá vẫn hoạt động bình thường.</div>
+      <div class="mapfoot">
+        <div class="legend"><span><i class="dot" style="background:var(--t-o)"></i>Lô đất ở (≤ 700 m²)</span><span><i class="dot" style="background:var(--t-v)"></i>Đất vườn, diện tích lớn</span></div>
+        <span>Chạm vào bản đồ để thả ghim</span>
+      </div>
+      <details class="howto">
         <summary>Cách lấy toạ độ trên Google Maps</summary>
-        <ol style="margin:6px 0 0;padding-left:20px">
-          <li>Nhấn giữ vào vị trí trên bản đồ Google Maps đến khi hiện ghim đỏ.</li>
-          <li>Toạ độ hiện ở ô tìm kiếm phía trên (vd 11.4300, 106.6560). Chạm vào để sao chép.</li>
-          <li>Dán vào ô bên trên rồi bấm <b>Thả ghim</b>.</li>
-        </ol>
-        <p style="margin:6px 0 0">Link chia sẻ dạng maps.app.goo.gl không chứa toạ độ nên app không đọc được.</p>
+        <div class="body">
+          <ol>
+            <li>Nhấn giữ vào vị trí trên Google Maps đến khi hiện ghim đỏ.</li>
+            <li>Toạ độ hiện ở ô tìm kiếm phía trên (vd 11.4300, 106.6560). Chạm vào để sao chép.</li>
+            <li>Dán vào ô toạ độ rồi bấm <b>Thả ghim</b>.</li>
+          </ol>
+          <p>Link chia sẻ dạng maps.app.goo.gl không chứa toạ độ nên app không đọc được.</p>
+        </div>
       </details>
     </section>
 
-    <aside class="panel">
-      <section class="card" aria-labelledby="hType">
-        <h2 id="hType">Loại đất cần so sánh</h2>
-        <div class="row" id="typeChips" role="group" aria-label="Loại đất"></div>
-      </section>
-
-      <section class="card" aria-labelledby="hResult" id="resultCard">
-        <h2 id="hResult">Giá tham khảo</h2>
-        <div id="result"></div>
-        <div class="postbox" id="postBox" hidden></div>
-      </section>
-
-      <section class="card" aria-labelledby="hPins">
-        <h2 id="hPins">Ghim của bạn</h2>
+    <aside class="panel" id="resultCard" aria-label="Giá tham khảo">
+      <div class="seg" id="typeChips" role="group" aria-label="Loại đất"></div>
+      <div id="result"></div>
+      <div class="card">
+        <h2>Ghim của bạn</h2>
         <div class="pins" id="pinList"></div>
-      </section>
+      </div>
     </aside>
   </div>
 
-  <section class="card" aria-labelledby="hCov">
-    <h2 id="hCov">Độ phủ dữ liệu theo xã/phường</h2>
-    <p class="empty">Nơi có nhiều tin thì giá tham khảo đáng tin hơn. Các xã chưa có tin sẽ lấy tin gần nhất ở xã lân cận.</p>
+  <section class="cov-wrap" aria-labelledby="hCov">
+    <header>
+      <h2 id="hCov">Độ phủ dữ liệu theo xã/phường</h2>
+      <p>Nơi có nhiều tin thì giá tham khảo đáng tin hơn. Xã chưa có tin sẽ lấy tin gần nhất ở xã lân cận.</p>
+    </header>
     <div class="cov" id="cov"></div>
   </section>
 
   <footer>
-    <p><b>Cách tính:</b> lấy các tin cùng loại đất gần ghim nhất, bắt đầu trong 2 km và nới dần tới 20 km cho đến khi đủ 5 tin. Giá/m² = giá rao ÷ tổng diện tích lô. Con số chính là trung vị; khoảng "phổ biến" là 50% tin ở giữa.</p>
-    <p><b>Lưu ý:</b> đây là giá rao bán, thường cao hơn giá giao dịch thực tế. Phần lớn tin chỉ ghi xã và tên đường, nên vị trí trên bản đồ là ước lượng theo trung tâm xã cũ, có thể lệch 1–3 km. Lô có nhiều thổ cư, mặt tiền đường lớn sẽ cao hơn hẳn lô đất vườn trong hẻm. Thông tin cá nhân người bán đã được loại bỏ; bấm "Xem tin gốc" để xem đầy đủ trên trang đăng.</p>
+    <p><b>Cách tính.</b> App lấy các tin cùng loại đất gần ghim nhất, bắt đầu trong 2 km và nới dần tới 20 km cho đến khi đủ 5 tin. Giá/m² bằng giá rao chia tổng diện tích lô. Con số chính là trung vị; khoảng phổ biến là 50% số tin ở giữa.</p>
+    <p><b>Lưu ý.</b> Đây là giá rao bán, thường cao hơn giá giao dịch thực tế. Phần lớn tin chỉ ghi xã và tên đường, nên vị trí trên bản đồ là ước lượng. Tên xã/phường theo đơn vị hành chính mới từ 1/7/2025. Không dùng thay cho thẩm định giá.</p>
   </footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
 (function(){
-const DATA = [{"t":"Đất sau mặt tiền QL13, gần trạm thu phí Chơn Thành","p":1550,"a":300,"w":5,"r":"Quốc lộ 13","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-2-lo-dat-mat-tien-duong-so-28-ql13-ngay-tram-thu-phi-chon-thanh-dt-300m2-lo-14850380.html","oc":"Thành Tâm","ward":"Chơn Thành","lat":11.4509,"lng":106.68294,"k":"o","ppm":5.1667},{"t":"2.000 m² có 100 m² thổ cư, khu dân cư","p":260,"a":2000,"w":null,"r":"Nhánh QL13","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/can-ban-dat-2-000m2-co-100m2-tc-khu-dan-cu-thich-hop-lam-nha-vuon-hoac-xay-tro-15238684.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48153,"lng":106.62968,"k":"v","ppm":0.13},{"t":"1.500 m², thổ cư 100 m², gần KCN","p":230,"a":1500,"w":null,"r":"","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-chinh-chu-1-500m2-tho-cu-100m2-ngay-kcn-gia-ngop-nang-m1-15196421.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48123,"lng":106.62961,"k":"v","ppm":0.1533},{"t":"Đất thổ cư có vườn sầu riêng, sát KCN","p":299,"a":170,"w":5,"r":"ĐT751","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-chu-be-no-ban-gap-vuon-sau-rieng-4-651m-view-song-be-cuc-dep-18643642.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.4822,"lng":106.62822,"k":"o","ppm":1.7588},{"t":"Mặt tiền 6 m Cao Bá Quát – Lê Duẩn","p":1200,"a":248,"w":6,"r":"Lê Duẩn","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/6m-cao-ba-quat-le-duan-minh-hung-chon-thanh-19034548.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47974,"lng":106.6301,"k":"o","ppm":4.8387},{"t":"270 m² có 60 m² thổ cư, gần KCN Becamex","p":335,"a":270,"w":5,"r":"Cao Bá Quát","tc":60,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-270m2-co-san-60-m2-tho-cu-chi-335d-tai-p-chon-thanh-ngay-kcn-becamex-minh-hung-18970040.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47929,"lng":106.62519,"k":"o","ppm":1.2407},{"t":"750 m² đất biệt thự vườn, kề Vincom QL13","p":2250,"a":750,"w":15,"r":"Phạm Hồng Thái","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-750m-dat-biet-thu-vuon-ke-vincom-ql13-duong-rong-4-lan-xe-18733750.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43357,"lng":106.6567,"k":"v","ppm":3.0},{"t":"694 m² gần chợ Minh Lập","p":1400,"a":694,"w":10,"r":"ĐT756","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-694m2-dat-cho-minh-lap-chon-thanh-tp-dong-nai-shr-18976417.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51871,"lng":106.73436,"k":"o","ppm":2.0173},{"t":"422 m² sát Becamex","p":400,"a":422,"w":7,"r":"ĐT756","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/lo-dat-nay-can-sang-ten-doi-chu-moi-sat-becamex-gia-sieu-ngop-400tr-sang-so-17591765.html","oc":"Minh Thành","ward":"Chơn Thành","lat":11.40614,"lng":106.62553,"k":"o","ppm":0.9479},{"t":"Mặt tiền kinh doanh, đường nhựa 32 m, sát KCN","p":400,"a":500,"w":10,"r":"Quốc lộ 13","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/thanh-ly-lo-dat-mat-tien-kinh-doanh-sat-kcn-17765825.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47834,"lng":106.62989,"k":"o","ppm":0.8},{"t":"Đất nền 5x40, đường nhựa 15 m","p":350,"a":200,"w":5,"r":"Quốc lộ 14","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-thi-em-khong-co-nhung-dat-nen-em-co-mot-lo-can-sang-ten-doi-chu-dt-5x40-gia-35-16350395.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.52181,"lng":106.73606,"k":"o","ppm":1.75},{"t":"200 m² đường Nguyễn Huệ","p":750,"a":200,"w":6,"r":"Nguyễn Huệ","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-200m2-tai-nguyen-hue-xa-minh-long-huyen-chon-thanh-gia-cuc-chat-750-trieu-vnd-18898695.html","oc":"Minh Long","ward":"Minh Hưng","lat":11.5047,"lng":106.65571,"k":"o","ppm":3.75},{"t":"Đất nền dự án đường số 8","p":550,"a":215,"w":5,"r":"Đường N1","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-nen-du-an-tai-so-8-minh-hung-chon-thanh-550-trieu-215m2-hang-hiem-chinh-chu-18755535.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48424,"lng":106.62922,"k":"o","ppm":2.5581},{"t":"215 m² mặt tiền đường nhựa sát KCN","p":490,"a":215,"w":null,"r":"Gần QL13","tc":null,"d":"28/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-ban-215m2-dat-t-u-mt-duong-nhua-sat-kcn-c-nhan-lam-viec-dong-gia-490tr-19000490.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47904,"lng":106.63047,"k":"o","ppm":2.2791},{"t":"5x52 m thổ cư, gần quốc lộ ra KCN","p":395,"a":260,"w":5,"r":"","tc":null,"d":"28/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-ban-5x52-260m2-dat-t-cu-shr-nam-gan-quoc-lo-lon-thong-ra-kcn-dang-hd-gia-395tr-16604779.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51659,"lng":106.73385,"k":"o","ppm":1.5192},{"t":"1.001 m² sổ riêng, đường rộng gần KCN","p":180,"a":1001,"w":null,"r":"","tc":null,"d":"28/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/can-tien-ban-nhanh-1001m2-dat-so-rieng-duong-rong-ngay-kcn-dang-hd-dan-cu-dong-gia-180tr-16126383.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51823,"lng":106.73423,"k":"v","ppm":0.1798},{"t":"650 m² mặt tiền gần chợ, KCN","p":470,"a":650,"w":null,"r":"Quốc lộ 13","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-sang-gap-lo-2100m2-va-500m2-t-cu-ngay-cho-kcn-dan-dong-gia-170tr-18829441.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47797,"lng":106.63022,"k":"o","ppm":0.7231},{"t":"660 m² thổ cư, đường nhựa 12 m gần chợ","p":470,"a":660,"w":15,"r":"","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-ban-nha-va-dat-220m2-shr-th-cu-mat-duong-nhua-ngay-cho-kcn-gia-795tr-18890113.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47693,"lng":106.62566,"k":"o","ppm":0.7121},{"t":"1.000 m² ngang 18 m","p":400,"a":1000,"w":18,"r":"","tc":null,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/1000m2-ngang-18m-chon-thanh-chi-can-200-trieu-so-huu-ngay-16132304.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51554,"lng":106.7345,"k":"v","ppm":0.4},{"t":"2 nền 10x28 gần ngã 4 Chơn Thành","p":655,"a":280,"w":10,"r":"Quốc lộ 14","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/sang-gap-2-nen-dat-10x28m2-280m2-ngay-nga-4-chon-thanh-tttm-plaza-phat-trien-gia-655tr-18847682.html","oc":"Minh Long","ward":"Minh Hưng","lat":11.50106,"lng":106.65742,"k":"o","ppm":2.3393},{"t":"15x46 m thổ cư, mặt tiền nhựa 12 m","p":680,"a":700,"w":15,"r":"Lê Duẩn","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/can-tien-ban-gap-15x46m-700m2-dat-tho-cu-mt-nhua-12m-ngay-kcn-cho-gia-680tr-19125376.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43014,"lng":106.65459,"k":"o","ppm":0.9714},{"t":"2.000 m² đất vườn, đường nhựa thông QL13","p":750,"a":2000,"w":8,"r":"","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-ban-gap-2000m2-dat-vuon-tphcm-mt-duong-nhua-thong-ql13-gia-750tr-19198721.html","oc":"Quang Minh","ward":"Tân Quan","lat":11.51032,"lng":106.62614,"k":"v","ppm":0.375},{"t":"450 m² đường Lê Duẩn","p":595,"a":450,"w":10,"r":"Lê Duẩn","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-tai-le-duan-595-trieu-450-m2-phap-ly-day-du-19198558.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42623,"lng":106.65463,"k":"o","ppm":1.3222},{"t":"675 m² mặt tiền Lê Duẩn","p":5200,"a":675,"w":11.4,"r":"Lê Duẩn","tc":null,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-675m-thi-tran-chon-thanh-binh-phuoc-10062710.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42844,"lng":106.65824,"k":"o","ppm":7.7037},{"t":"225 m² có nhà, Cao Bá Quát","p":990,"a":225,"w":5,"r":"Cao Bá Quát","tc":60,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-nha-cao-ba-quat-225m2-tc-60m2-gia-chi-990-trieu-shr-chon-thanh-plaza-ql13-19169966.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43245,"lng":106.6603,"k":"o","ppm":4.4},{"t":"1.075 m², thổ cư 250 m², cổng KCN Minh Hưng 3","p":370,"a":1075,"w":25,"r":"Đường số 8","tc":250,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-ban-re-1075m2-tc-250m2-gia-370-trieu-shr-ngay-cong-kcn-minh-hung-3-ql13-19161564.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48399,"lng":106.62773,"k":"v","ppm":0.3442},{"t":"200 m² gần chợ Chơn Thành, thổ cư 60 m²","p":655,"a":200,"w":6.8,"r":"","tc":60,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-tt-cho-chon-thanh-200m2-mt6-8x26-tc-60m2-655-trieu-shr-san-kcn-becamex-19097308.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.4353,"lng":106.65625,"k":"o","ppm":3.275},{"t":"450 m² gần TTHC, thổ cư 120 m²","p":685,"a":450,"w":10,"r":"Gần QL13","tc":120,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-tthc-chon-thanh-450m2-10x45-tc-120m2-gia-685-trieu-so-san-kcn-becamex-3-phut-19055944.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42766,"lng":106.65464,"k":"o","ppm":1.5222},{"t":"900 m² mặt tiền Lê Duẩn, thổ cư 240 m²","p":680,"a":900,"w":20,"r":"Lê Duẩn","tc":240,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-gia-dinh-de-lai-900m2-20x45-tc-240m2-gia-680-trieu-shr-san-mt-le-duan-kcn-becamex-19144824.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42591,"lng":106.65343,"k":"v","ppm":0.7556},{"t":"430 m² cổng KCN Minh Hưng 3, thổ cư 100 m²","p":470,"a":430,"w":10,"r":"Gần QL13","tc":100,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-cong-kcn-minh-hung-3-dt-430m2-10x43-tc-100m2-470tr-so-san-ql13-chi-3-phut-19056099.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42807,"lng":106.65725,"k":"o","ppm":1.093},{"t":"225 m² gần TTHC, thổ cư 120 m²","p":685,"a":225,"w":5,"r":"Nguyễn Văn Linh","tc":120,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-gap-lo-dat-ngay-tthc-chon-thanh-225m2-5x45-tc-120m2-685-trieu-shr-canh-kcn-19099749.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43125,"lng":106.65528,"k":"o","ppm":3.0444},{"t":"450 m² mặt tiền 24 m, thổ cư 200 m²","p":685,"a":450,"w":10,"r":"Lê Duẩn","tc":200,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-mat-tien-24m-tthc-chon-thanh-450m2-10x45-tc-200m2-685-trieu-shr-canh-kcn-becamex-19135612.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43071,"lng":106.65401,"k":"o","ppm":1.5222},{"t":"225 m² tặng nhà, thổ cư 60 m²","p":990,"a":225,"w":5,"r":"Nguyễn Văn Linh","tc":60,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-gui-ban-dat-tang-nha-225m2-tc-60m2-gia-990-trieu-ngay-tthc-chon-thanh-ql-13-19176215.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42818,"lng":106.65712,"k":"o","ppm":4.4},{"t":"900 m² sát cổng KCN Minh Hưng 3, thổ cư 200 m²","p":320,"a":900,"w":20,"r":"Đường số 8","tc":200,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-sat-cong-kcn-minh-hung-3-gan-900m2-20-x-43-tc-200m2-shr-gia-320-trieu--19153115.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48419,"lng":106.62731,"k":"v","ppm":0.3556},{"t":"1.423 m² gần trường học","p":230,"a":1423,"w":25,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-1-400m2-25x56m-gia-230-trieu-shr-gan-truong-hoc-dan-cu-dong-14471233.html","oc":"Minh Thắng","ward":"Nha Bích","lat":11.49487,"lng":106.77149,"k":"v","ppm":0.1616},{"t":"3.800 m², thổ cư 100 m², gần chợ","p":150,"a":3800,"w":null,"r":"","tc":100,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-cat-lo-3-800m2-tho-cu-100m2-gia-150-trieu-so-rieng-dan-cu-dong-sat-cho-m3-15282902.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48221,"lng":106.62737,"k":"v","ppm":0.0395},{"t":"3.300 m² gần KCN","p":210,"a":3300,"w":null,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-can-ban-3-300m2-ngay-kcn-gia-ngop-nang-m5-15347862.html","oc":"Minh Thành","ward":"Chơn Thành","lat":11.40057,"lng":106.62533,"k":"v","ppm":0.0636},{"t":"2.600 m² gần chợ, trường, quốc lộ","p":180,"a":2600,"w":null,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-2-600m2-gia-180-trieu-sat-cho-truong-hoc-shr-sat-quoc-lo-tds2839-15933533.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51984,"lng":106.74029,"k":"v","ppm":0.0692},{"t":"1.000 m² (20x50) cạnh KCN Becamex","p":480,"a":1000,"w":20,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-1-000m2-20x50-gia-480-trieu-canh-kcn-becamex-quoc-lo-tt-hanh-chinh-tds386-15933597.html","oc":"Minh Thành","ward":"Chơn Thành","lat":11.40221,"lng":106.62632,"k":"v","ppm":0.48},{"t":"Lô góc 2 mặt tiền 1.675 m² sát KCN","p":350,"a":1675,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/thua-lo-kd-can-ban-gap-230m2-tho-cu-ngay-tthc-chon-thanh-becamex-id71272226","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47674,"lng":106.62371,"k":"v","ppm":0.209},{"t":"Lô 7 m đường ĐT751, gần sân banh Chảo Lửa","p":6600,"a":210,"w":7,"r":"ĐT751","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-lo-dat-7m-duong-dt-751-gan-san-banh-chao-lua-tx-chon-thanh-id71344468","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42847,"lng":106.6605,"k":"o","ppm":31.4286},{"t":"3.000 m² vườn bưởi, sổ riêng","p":280,"a":3000,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/can-tien-ban-gap-vuon-buoi-tp-dong-nai-3000m2-id71315881","oc":"Đồng Tiến","ward":"Đồng Tâm","lat":11.56971,"lng":106.98544,"k":"v","ppm":0.0933},{"t":"Ngang 10 m, 570 m² có thổ cư, gần Becamex","p":420,"a":570,"w":10,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/chican-ban-10m-ngang-dt-570m2-co-tho-cu-chon-thanh-gan-kcn-becamex-id71344027","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42791,"lng":106.65672,"k":"o","ppm":0.7368},{"t":"Đất xây trọ cạnh KCN Minh Hưng","p":450,"a":314.8,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-xay-tro-canh-kcn-minh-hung-gia-ngop-id71344030","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48399,"lng":106.63051,"k":"o","ppm":1.4295},{"t":"215 m² thổ cư Minh Hưng","p":350,"a":215,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ket-tien-ban-re-lo-dat-215m-minh-hung-dong-nai-tho-cu-gia-350trieu-id71344029","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48229,"lng":106.63172,"k":"o","ppm":1.6279},{"t":"300 m² thổ cư ngân hàng phát mãi","p":400,"a":300,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ngan-hang-phat-mai-mieng-dat-tho-cu-dt-300m2-gia-400-trieu-co-so-san-id71316034","oc":"Minh Lập","ward":"Nha Bích","lat":11.52447,"lng":106.73537,"k":"o","ppm":1.3333},{"t":"Mặt tiền đường 32 m","p":520,"a":250,"w":null,"r":"Đường 32 m","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/thanh-ly-dat-mat-tien-duong-32m-id71316027","oc":"Minh Lập","ward":"Nha Bích","lat":11.52182,"lng":106.73333,"k":"o","ppm":2.08},{"t":"Mặt tiền QL14 ngang 20 m, thổ cư 100 m²","p":6500,"a":1500,"w":20,"r":"Quốc lộ 14","tc":100,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-bu-dang-binh-phuoc/dat-mat-tien-quoc-lo-14-chieu-ngang-20-m-id71329499","oc":"Nghĩa Trung","ward":"Nghĩa Trung","lat":11.73716,"lng":107.0941,"k":"v","ppm":4.3333},{"t":"225 m² thổ cư gần KCN Minh Hưng 3","p":590,"a":225,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-gap-225m2-tho-cu-nam-ngay-vi-tri-trung-tam-dac-dia-kcn-m-hung-3-id71341925","oc":"Minh Long","ward":"Minh Hưng","lat":11.50029,"lng":106.66197,"k":"o","ppm":2.6222},{"t":"10 m mặt tiền Nguyễn Văn Linh view hồ","p":800,"a":360,"w":10,"r":"Nguyễn Văn Linh","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/soc-soc-ra-nhanh-10m-mt-nguyen-van-linh-view-ho-chi-800tr-id71319006","oc":"TT Tân Phú (Đồng Phú)","ward":"Đồng Phú","lat":11.48473,"lng":106.94311,"k":"o","ppm":2.2222},{"t":"226 m² đất ở đô thị trung tâm Chơn Thành","p":695,"a":226,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-o-do-thi-ngay-trung-tam-chon-thanh-chi-200-trieu-so-huu-ngay-id71201910","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42605,"lng":106.65536,"k":"o","ppm":3.0752},{"t":"215,9 m² đường bê tông, thôn Phú Nguyên","p":680,"a":215.9,"w":5,"r":"Đường bê tông","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-phu-rieng-binh-phuoc/chinh-chu-ban-dat-tai-phu-rieng-binh-phuoc-id71324792","oc":"Phú Riềng","ward":"Phú Riềng","lat":11.68945,"lng":106.98774,"k":"o","ppm":3.1496},{"t":"10x43 m mặt tiền 12 m sát chợ","p":470,"a":430,"w":10,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/can-tien-ban-gap-10x43m-430m2-dat-ngay-kcn-mt-12m-sat-cho-470tr-id71283779","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47681,"lng":106.62407,"k":"o","ppm":1.093},{"t":"275 m² trung tâm, giáp QL13","p":685,"a":275,"w":null,"r":"Gần QL13","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/tam-685tr-tim-dau-ra-275m2-ngay-tt-chon-thanh-ke-kcn-giap-ql13-id71254518","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42826,"lng":106.6523,"k":"o","ppm":2.4909},{"t":"220 m² trung tâm, cạnh KCN Becamex","p":680,"a":220,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-dat-trung-tam-chon-thanh-canh-kcn-becamex-gia-680tr-id71329386","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42771,"lng":106.65842,"k":"o","ppm":3.0909},{"t":"4.000 m² nhà vườn","p":330,"a":4000,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-nha-vuon-4000m2-gia-330tr-khong-phat-sinh-them-id71342146","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48177,"lng":106.62536,"k":"v","ppm":0.0825},{"t":"550 m² trung tâm, sát QL13","p":1350,"a":550,"w":null,"r":"Gần QL13","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/550m2-dat-trung-tam-chon-thanh-sat-ql13-ke-kcn-minh-hung-3-becamex-id71322641","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43091,"lng":106.6515,"k":"o","ppm":2.4545},{"t":"Mặt đường vành đai 24 (đang lên nhựa 12 m)","p":550,"a":450,"w":null,"r":"Vành đai 24","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-ngop-vanh-dai-so-24-dat-ngang-day-tro-duong-dang-len-nhua-12m-id71315594","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48266,"lng":106.62623,"k":"o","ppm":1.2222},{"t":"130 m² mặt tiền đường nhựa gần Đảo Yến","p":800,"a":130.4,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/chinh-chu-het-gong-noi-thanh-ly-dat-dep-tai-dong-phu-binh-phuoc-cu-id71341485","oc":"TT Tân Phú (Đồng Phú)","ward":"Đồng Phú","lat":11.48785,"lng":106.94687,"k":"o","ppm":6.135},{"t":"550 m² (10x55), thổ cư 120 m²","p":670,"a":550,"w":10,"r":"Gần QL13","tc":120,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/550m2-670tr-trung-tam-chon-thanh-sat-ql13-ke-kcn-minh-hung-3-becamex-id71332700","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43324,"lng":106.65384,"k":"o","ppm":1.2182},{"t":"Đất xây trọ cách QL13 500 m","p":685,"a":550,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-xay-tro-cach-ql13-dung-500m-giua-kcn-minh-hung-becamex-id71253333","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43278,"lng":106.65419,"k":"o","ppm":1.2455},{"t":"430 m² (10x43), thổ cư 100 m²","p":450,"a":430,"w":10,"r":"","tc":100,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ket-tien-ban-gap-1137m2-dat-tho-cu-dan-cu-dong-ke-kcn-becamex-id71283751","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47726,"lng":106.62445,"k":"o","ppm":1.0465},{"t":"200 m², thổ cư 50 m², mặt tiền nhựa 6 m","p":600,"a":200,"w":5,"r":"Đường nhựa 6 m","tc":50,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/chinh-chu-can-tien-ban-gap-lo-dat-200m-tho-cu-50m-so-hong-rieng-id71329337","oc":"Nha Bích","ward":"Nha Bích","lat":11.46665,"lng":106.75093,"k":"o","ppm":3.0},{"t":"Lô 5x30 mặt tiền đường nhựa, thổ cư 50 m²","p":500,"a":150,"w":5,"r":"Đường nhựa","tc":50,"d":"06/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-nen-mat-tien-duong-nhua-200m2-minh-lap-chon-thanh-id71303609","oc":"Minh Lập","ward":"Nha Bích","lat":11.51999,"lng":106.73695,"k":"o","ppm":3.3333},{"t":"487 m² mặt tiền Hoàng Văn Thụ, thổ cư 300 m²","p":1450,"a":487,"w":null,"r":"Hoàng Văn Thụ","tc":300,"d":"06/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-thi-xa-phuoc-long-binh-phuoc/ket-tien-can-ban-dat-tho-cu-tai-phuoc-long-id71302923","oc":"Phước Bình","ward":"Phước Bình","lat":11.79787,"lng":106.96085,"k":"o","ppm":2.9774},{"t":"1.007 m² có 200 m² thổ cư (ấp Minh Lập 6)","p":980,"a":1007,"w":null,"r":"","tc":200,"d":"06/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/chinh-chu-ban-dat-minh-lap-1-007-m-co-san-200-m-dat-tho-cu-id71302811","oc":"Nha Bích","ward":"Nha Bích","lat":11.46059,"lng":106.75013,"k":"v","ppm":0.9732},{"t":"329 m², thổ cư 50 m²","p":195,"a":329,"w":null,"r":"","tc":50,"d":"05/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-thi-xa-binh-long-binh-phuoc/can-ban-dat-chinh-chu-329m2-tho-cu-gia-195tr-id71300543","oc":"An Lộc (cũ)","ward":"Bình Long","lat":11.65159,"lng":106.60126,"k":"o","ppm":0.5927},{"t":"5x40, thổ cư 100 m² (ấp Thuận Tân)","p":219,"a":219.5,"w":5,"r":"","tc":100,"d":"04/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/chinh-chu-can-ban-nhanh-lo-dat-5x40-san-100m2-tho-cu-id71296584","oc":"Thuận Lợi","ward":"Thuận Lợi","lat":11.61176,"lng":106.9704,"k":"o","ppm":0.9977},{"t":"447 m² Phú Tân, thổ cư 100 m², giáp đường bê tông","p":1230,"a":447.7,"w":null,"r":"Đường bê tông","tc":100,"d":"03/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-phu-rieng-binh-phuoc/ban-dat-phu-tan-phu-rieng-binh-phuoc-id71294594","oc":"Phú Riềng","ward":"Phú Riềng","lat":11.6933,"lng":106.98656,"k":"o","ppm":2.7474},{"t":"2.143 m², có thương lượng","p":1300,"a":2143,"w":null,"r":"","tc":null,"d":"26/10/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-loc-ninh-binh-phuoc/ban-gap-co-thuong-luong-nhe-id71287107","oc":"Lộc Hưng","ward":"Lộc Hưng","lat":11.76028,"lng":106.55802,"k":"v","ppm":0.6066},{"t":"5.300 m² mặt tiền QL13","p":11000,"a":5300,"w":null,"r":"Quốc lộ 13","tc":null,"d":"25/10/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-loc-ninh-binh-phuoc/dat-mat-tien-quoc-lo-13-xa-loc-tan-loc-ninh-binh-phuoc-5300m2-12-5ty-id70939184","oc":"Lộc Tấn","ward":"Lộc Tấn","lat":11.9573,"lng":106.63322,"k":"v","ppm":2.0755},{"t":"892 m² đất ở nông thôn, cách đường HCM 1 km","p":550,"a":892,"w":10,"r":"","tc":100,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-gap-dat-huyen-bu-dang-xa-minh-hung-892m2-ont-gia-550-trieu-co-tl--19008890.html","oc":"Minh Hưng (Bù Đăng)","ward":"Bù Đăng","lat":11.85285,"lng":107.20366,"k":"v","ppm":0.6166},{"t":"256 m² đường Đoàn Đức Thái","p":420,"a":256,"w":5,"r":"Đoàn Đức Thái","tc":null,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-sieu-dep-tai-duc-lieu-binh-phuoc-cu-tp-dong-nai-xem-la-me-chot-la-vui--19070296.html","oc":"Đức Liễu","ward":"Nghĩa Trung","lat":11.78707,"lng":107.11707,"k":"o","ppm":1.6406},{"t":"250 m² có 100 m² thổ cư","p":305,"a":250,"w":5,"r":"","tc":100,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-ban-dt-250m2-co-100m-tho-cu-gia-310-trieu-18747659.html","oc":"Nghĩa Trung","ward":"Nghĩa Trung","lat":11.73683,"lng":107.0977,"k":"o","ppm":1.22},{"t":"100 m² gần chợ, UBND, đường ĐT760","p":550,"a":100,"w":5,"r":"ĐT760","tc":null,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/d-at-tp-dong-nai-so-san-550tr-khong-phat-sinh-ngay-cho-sieu-thi-uy-ban-khu-dan-cu-18899463.html","oc":"Bom Bo","ward":"Bom Bo","lat":11.88433,"lng":107.18384,"k":"o","ppm":5.5},{"t":"105 m² trung tâm hành chính, đường ĐT760","p":540,"a":105,"w":5,"r":"ĐT760","tc":null,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/d-at-trung-tam-hanh-chinh-so-san-540tr-nhan-so-ngay-cho-sieu-thi-uy-ban-khu-dan-cu-18923221.html","oc":"Bom Bo","ward":"Bom Bo","lat":11.8888,"lng":107.18345,"k":"o","ppm":5.1429},{"t":"105 m² mặt đường 13 m có vỉa hè","p":700,"a":105,"w":5,"r":"Đường nhựa 13 m","tc":null,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-dep-mat-duong-13m-via-he-bom-bo-dong-nai-bu-dang-binh-phuoc-cu-700-trieu-16979902.html","oc":"Bom Bo","ward":"Bom Bo","lat":11.88974,"lng":107.18084,"k":"o","ppm":6.6667},{"t":"2 lô 744 m² liền kề, thổ cư 200 m²","p":290,"a":744,"w":10,"r":"Đường bê tông","tc":200,"d":"17/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-2-lo-tho-cu-743-6m2-lien-ke-ngang-10m-gia-ngop-290trd-14270522.html","oc":"Thống Nhất (Bù Đăng)","ward":"Phước Sơn","lat":11.93267,"lng":107.25692,"k":"v","ppm":0.3898},{"t":"1,1 ha vườn điều view hồ Sơn Lợi","p":2000,"a":11320,"w":null,"r":"Ven hồ Sơn Lợi","tc":null,"d":"11/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-1-1-hecta-vuon-dieu-thuc-te-gan-2hec-235m-mat-tien-view-ho-son-loi-cuc-ki-dep-1-7-ty-14583659.html","oc":"Thọ Sơn","ward":"Thọ Sơn","lat":11.6956,"lng":107.337,"k":"v","ppm":0.1767},{"t":"1.000 m² mặt tiền đường gần quốc lộ, KCN","p":165,"a":1000,"w":10,"r":"","tc":null,"d":"24/09/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/3000m2-mat-tien-duong-gan-quoc-lo-gan-kcn-chi-165-trieu-so-dong-phu-dong-nai-19094378.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.4253,"lng":107.02045,"k":"v","ppm":0.165},{"t":"785 m², thổ cư 100 m²","p":1200,"a":785,"w":10,"r":"","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/minh-chinh-chu-ban-lo-dat-dong-tam-dong-phu-binh-phuoc-15836610.html","oc":"Đồng Tâm","ward":"Đồng Tâm","lat":11.53889,"lng":107.03366,"k":"v","ppm":1.5287},{"t":"1.000 m² trồng bưởi, đường quy hoạch 12 m","p":255,"a":1000,"w":31,"r":"Đường QH 12 m","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/1000m2-dat-31x33-duong-qh-12m-dang-trong-full-buoi-da-xanh-18954692.html","oc":"Đồng Tiến","ward":"Đồng Tâm","lat":11.56305,"lng":106.98547,"k":"v","ppm":0.255},{"t":"304 m² mặt tiền đường xuyên tâm 32 m","p":600,"a":304,"w":23,"r":"Đường xuyên tâm","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-mat-tien-duong-xuyen-tam-300m2-cap-sat-cong-nghiep-tan-tien-1-2-18951646.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.354,"lng":106.96834,"k":"o","ppm":1.9737},{"t":"Mặt tiền ĐH Tân Phước, thổ cư 100 m²","p":350,"a":250,"w":5,"r":"ĐH Tân Phước","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/mat-tien-duong-dh-tan-phuoc-dong-phu-15513935.html","oc":"Tân Phước","ward":"Đồng Tâm","lat":11.50183,"lng":107.05726,"k":"o","ppm":1.4},{"t":"Mặt tiền Tuyến 3, ngã 4 Tân Hòa","p":1050,"a":250,"w":5,"r":"Tuyến 3","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-mat-tien-tuyen-3-ngay-nga-4-tan-hoa--16170380.html","oc":"Tân Hòa","ward":"Tân Lợi","lat":11.36668,"lng":107.03397,"k":"o","ppm":4.2},{"t":"Đường nhựa 32 m, 5x50, thổ cư 100 m²","p":330,"a":250,"w":5,"r":"Đường liên xã 32 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/duong-nhua-32m-ngay-khu-dan-cu-5x50m-co-100tc-16433412.html","oc":"Thuận Lợi","ward":"Thuận Lợi","lat":11.606,"lng":106.97157,"k":"o","ppm":1.32},{"t":"Mặt tiền ĐT753, 5x70, thổ cư 100 m²","p":700,"a":360,"w":5,"r":"ĐT753","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dt-753-dien-tich-5x70m-co-100m2-tho-cu-18254976.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.42749,"lng":107.01126,"k":"o","ppm":1.9444},{"t":"Mặt tiền đường Thanh Niên 42 m","p":680,"a":200,"w":5,"r":"Đường Thanh Niên","tc":118,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-mat-tien-duong-thanh-nien-42m-17934577.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41245,"lng":106.90727,"k":"o","ppm":3.4},{"t":"1,3 ha gần UBND xã Tân Lợi, thổ cư 150 m²","p":3200,"a":13000,"w":35,"r":"Đường bê tông","tc":150,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/1-3ha-ngay-gan-ub-xa-tan-loi-dong-phu-16714686.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.42135,"lng":107.01818,"k":"v","ppm":0.2462},{"t":"400 m² đường nhựa gần UBND Tân Hưng","p":490,"a":400,"w":5,"r":"Đường liên xã","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-tho-cu-duong-nhua-ngay-uy-ban-tan-hung-15257388.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41766,"lng":106.90322,"k":"o","ppm":1.225},{"t":"3.700 m² mặt tiền Tuyến 3, thổ cư 200 m²","p":4800,"a":3700,"w":10,"r":"Tuyến 3","tc":200,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-3-700m2-dat-mat-tien-tuyen-so-3-dong-phu-18991912.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34995,"lng":106.96562,"k":"v","ppm":1.2973},{"t":"Mặt tiền Tuyến 3, KCN VSIP","p":880,"a":200,"w":5,"r":"Tuyến 3","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-mat-tien-tuyen-3-khu-cong-nghiep-vsip-dong-nam-dong-phu-17531637.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35286,"lng":106.96552,"k":"o","ppm":4.4},{"t":"Mặt tiền Tuyến 3, 5x40","p":690,"a":200,"w":5,"r":"Tuyến 3","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-mat-tien-tuyen-so-3-dong-phu-5x40m-chi-690tr-19019003.html","oc":"Tân Hòa","ward":"Tân Lợi","lat":11.36611,"lng":107.0334,"k":"o","ppm":3.45},{"t":"4,2 sào gần chợ Tân Phước","p":850,"a":4200,"w":9,"r":"Cách ĐT753 500 m","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-4-2sao-chi-850tr-ngay-cho-tan-phuoc-dong-phu-17980088.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41699,"lng":106.90778,"k":"v","ppm":0.2024},{"t":"1.050 m² cạnh KCN Đông Nam Đồng Phú","p":690,"a":1050,"w":22,"r":"Đường liên xã","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-sao-ngang-lon-ngay-canh-kcn-dong-nam-dong-phu-17572415.html","oc":"Tân Hòa","ward":"Tân Lợi","lat":11.37451,"lng":107.03192,"k":"v","ppm":0.6571},{"t":"5x36, thổ cư 100 m², gần KCN Bắc Đồng Phú","p":580,"a":166,"w":5,"r":"Đường nhựa 42 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/5x36-100tc-ngay-kcn-bac-dong-phu-b-18954661.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.42249,"lng":107.01837,"k":"o","ppm":3.494},{"t":"Mặt tiền đường xuyên tâm 5x40","p":500,"a":200,"w":5,"r":"Đường xuyên tâm","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-30-lo-dat-mat-tien-duong-xuyen-tam-tan-tien-dong-phu-16643933.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35149,"lng":106.96883,"k":"o","ppm":2.5},{"t":"Đường vành đai hồ Suối Giai","p":680,"a":200,"w":5,"r":"Vành đai hồ Suối Giai","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-vanh-dai-ho-suoi-giai-dong-phu-16042274.html","oc":"TT Tân Phú (Đồng Phú)","ward":"Đồng Phú","lat":11.48773,"lng":106.94483,"k":"o","ppm":3.4},{"t":"Mặt tiền Tuyến 3, KCN Đông Nam Đồng Phú","p":780,"a":200,"w":5,"r":"Tuyến 3","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/mat-tien-tuyen-so-3-khu-cong-nghiep-dong-nam-dong-phu-15313250.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35175,"lng":106.97503,"k":"o","ppm":3.9},{"t":"Lô góc 2 mặt tiền ĐT753, thổ cư 200 m²","p":1600,"a":788,"w":7,"r":"ĐT753","tc":200,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-goc-2-mat-tien-dt-753-7x58m-co-san-200m2-tho-cu-18014948.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41643,"lng":106.90514,"k":"v","ppm":2.0305},{"t":"Sát tuyến số 4, thổ cư 100 m²","p":350,"a":250,"w":5,"r":"Gần Tuyến 4","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-ngay-sat-sat-tuyen-so-4-chi-350tr-18935705.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.4258,"lng":107.01825,"k":"o","ppm":1.4},{"t":"1,9 ha mặt tiền Tuyến 3","p":11000,"a":19000,"w":16,"r":"Tuyến 3","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-1ha9-mat-tien-tuyen-3-vao-khu-cong-nghiep-4200ha-dong-nam-dong-phu-18482262.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34916,"lng":106.96478,"k":"v","ppm":0.5789},{"t":"5x50 đường 42 m, thổ cư 100 m²","p":490,"a":220,"w":5,"r":"Đường nhựa 42 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-5x50m-100tc-duong-42m-18921022.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.4229,"lng":107.01765,"k":"o","ppm":2.2273},{"t":"5x50 gần KCN Tân Tiến, thổ cư 100 m²","p":775,"a":250,"w":5,"r":"Đường nhựa 29 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-5x50m-ngay-khu-cong-nghiep-tan-tien-thanh-phuong-18035703.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35445,"lng":106.96716,"k":"o","ppm":3.1},{"t":"5x40 mặt tiền đường xuyên tâm 32 m","p":560,"a":200,"w":5,"r":"Đường xuyên tâm","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/5x40m-dat-mat-tien-duong-xuyen-tam-dong-phu-binh-phuoc-17745183.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34574,"lng":106.97299,"k":"o","ppm":2.8},{"t":"5x50 mặt tiền đường xuyên tâm","p":500,"a":250,"w":5,"r":"Đường xuyên tâm","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/mat-tien-duong-xuyen-tam-di-qua-bon-tuyen-dong-phu-16997220.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34699,"lng":106.96593,"k":"o","ppm":2.0},{"t":"Mặt tiền QL14, 10x83","p":1800,"a":830,"w":10,"r":"Quốc lộ 14","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chu-can-tien-ban-gap-mat-tien-ql-14-dong-tien-15115403.html","oc":"Đồng Tiến","ward":"Đồng Tâm","lat":11.56318,"lng":106.98298,"k":"v","ppm":2.1687}];
+const DATA = [{"t":"Đất sau mặt tiền QL13, gần trạm thu phí Chơn Thành","p":1550,"a":300,"w":5,"r":"Quốc lộ 13","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-2-lo-dat-mat-tien-duong-so-28-ql13-ngay-tram-thu-phi-chon-thanh-dt-300m2-lo-14850380.html","oc":"Thành Tâm","ward":"Chơn Thành","lat":11.4509,"lng":106.68294,"k":"o","ppm":5.1667},{"t":"2.000 m² có 100 m² thổ cư, khu dân cư","p":260,"a":2000,"w":null,"r":"Nhánh QL13","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/can-ban-dat-2-000m2-co-100m2-tc-khu-dan-cu-thich-hop-lam-nha-vuon-hoac-xay-tro-15238684.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48153,"lng":106.62968,"k":"v","ppm":0.13},{"t":"1.500 m², thổ cư 100 m², gần KCN","p":230,"a":1500,"w":null,"r":"","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-chinh-chu-1-500m2-tho-cu-100m2-ngay-kcn-gia-ngop-nang-m1-15196421.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48123,"lng":106.62961,"k":"v","ppm":0.1533},{"t":"Đất thổ cư có vườn sầu riêng, sát KCN","p":299,"a":170,"w":5,"r":"ĐT751","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-chu-be-no-ban-gap-vuon-sau-rieng-4-651m-view-song-be-cuc-dep-18643642.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.4822,"lng":106.62822,"k":"o","ppm":1.7588},{"t":"Mặt tiền 6 m Cao Bá Quát – Lê Duẩn","p":1200,"a":248,"w":6,"r":"Lê Duẩn","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/6m-cao-ba-quat-le-duan-minh-hung-chon-thanh-19034548.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47974,"lng":106.6301,"k":"o","ppm":4.8387},{"t":"270 m² có 60 m² thổ cư, gần KCN Becamex","p":335,"a":270,"w":5,"r":"Cao Bá Quát","tc":60,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-270m2-co-san-60-m2-tho-cu-chi-335d-tai-p-chon-thanh-ngay-kcn-becamex-minh-hung-18970040.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47929,"lng":106.62519,"k":"o","ppm":1.2407},{"t":"750 m² đất biệt thự vườn, kề Vincom QL13","p":2250,"a":750,"w":15,"r":"Phạm Hồng Thái","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-750m-dat-biet-thu-vuon-ke-vincom-ql13-duong-rong-4-lan-xe-18733750.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43357,"lng":106.6567,"k":"v","ppm":3.0},{"t":"694 m² gần chợ Minh Lập","p":1400,"a":694,"w":10,"r":"ĐT756","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-694m2-dat-cho-minh-lap-chon-thanh-tp-dong-nai-shr-18976417.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51871,"lng":106.73436,"k":"o","ppm":2.0173},{"t":"422 m² sát Becamex","p":400,"a":422,"w":7,"r":"ĐT756","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/lo-dat-nay-can-sang-ten-doi-chu-moi-sat-becamex-gia-sieu-ngop-400tr-sang-so-17591765.html","oc":"Minh Thành","ward":"Chơn Thành","lat":11.40614,"lng":106.62553,"k":"o","ppm":0.9479},{"t":"Mặt tiền kinh doanh, đường nhựa 32 m, sát KCN","p":400,"a":500,"w":10,"r":"Quốc lộ 13","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/thanh-ly-lo-dat-mat-tien-kinh-doanh-sat-kcn-17765825.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47834,"lng":106.62989,"k":"o","ppm":0.8},{"t":"Đất nền 5x40, đường nhựa 15 m","p":350,"a":200,"w":5,"r":"Quốc lộ 14","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-thi-em-khong-co-nhung-dat-nen-em-co-mot-lo-can-sang-ten-doi-chu-dt-5x40-gia-35-16350395.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.52181,"lng":106.73606,"k":"o","ppm":1.75},{"t":"200 m² đường Nguyễn Huệ","p":750,"a":200,"w":6,"r":"Nguyễn Huệ","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-200m2-tai-nguyen-hue-xa-minh-long-huyen-chon-thanh-gia-cuc-chat-750-trieu-vnd-18898695.html","oc":"Minh Long","ward":"Minh Hưng","lat":11.5047,"lng":106.65571,"k":"o","ppm":3.75},{"t":"Đất nền dự án đường số 8","p":550,"a":215,"w":5,"r":"Đường N1","tc":null,"d":"29/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-nen-du-an-tai-so-8-minh-hung-chon-thanh-550-trieu-215m2-hang-hiem-chinh-chu-18755535.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48424,"lng":106.62922,"k":"o","ppm":2.5581},{"t":"215 m² mặt tiền đường nhựa sát KCN","p":490,"a":215,"w":null,"r":"Gần QL13","tc":null,"d":"28/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-ban-215m2-dat-t-u-mt-duong-nhua-sat-kcn-c-nhan-lam-viec-dong-gia-490tr-19000490.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47904,"lng":106.63047,"k":"o","ppm":2.2791},{"t":"5x52 m thổ cư, gần quốc lộ ra KCN","p":395,"a":260,"w":5,"r":"","tc":null,"d":"28/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-ban-5x52-260m2-dat-t-cu-shr-nam-gan-quoc-lo-lon-thong-ra-kcn-dang-hd-gia-395tr-16604779.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51659,"lng":106.73385,"k":"o","ppm":1.5192},{"t":"1.001 m² sổ riêng, đường rộng gần KCN","p":180,"a":1001,"w":null,"r":"","tc":null,"d":"28/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/can-tien-ban-nhanh-1001m2-dat-so-rieng-duong-rong-ngay-kcn-dang-hd-dan-cu-dong-gia-180tr-16126383.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51823,"lng":106.73423,"k":"v","ppm":0.1798},{"t":"650 m² mặt tiền gần chợ, KCN","p":470,"a":650,"w":null,"r":"Quốc lộ 13","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-sang-gap-lo-2100m2-va-500m2-t-cu-ngay-cho-kcn-dan-dong-gia-170tr-18829441.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47797,"lng":106.63022,"k":"o","ppm":0.7231},{"t":"660 m² thổ cư, đường nhựa 12 m gần chợ","p":470,"a":660,"w":15,"r":"","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-ban-nha-va-dat-220m2-shr-th-cu-mat-duong-nhua-ngay-cho-kcn-gia-795tr-18890113.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47693,"lng":106.62566,"k":"o","ppm":0.7121},{"t":"1.000 m² ngang 18 m","p":400,"a":1000,"w":18,"r":"","tc":null,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/1000m2-ngang-18m-chon-thanh-chi-can-200-trieu-so-huu-ngay-16132304.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51554,"lng":106.7345,"k":"v","ppm":0.4},{"t":"2 nền 10x28 gần ngã 4 Chơn Thành","p":655,"a":280,"w":10,"r":"Quốc lộ 14","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/sang-gap-2-nen-dat-10x28m2-280m2-ngay-nga-4-chon-thanh-tttm-plaza-phat-trien-gia-655tr-18847682.html","oc":"Minh Long","ward":"Minh Hưng","lat":11.50106,"lng":106.65742,"k":"o","ppm":2.3393},{"t":"15x46 m thổ cư, mặt tiền nhựa 12 m","p":680,"a":700,"w":15,"r":"Lê Duẩn","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/can-tien-ban-gap-15x46m-700m2-dat-tho-cu-mt-nhua-12m-ngay-kcn-cho-gia-680tr-19125376.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43014,"lng":106.65459,"k":"o","ppm":0.9714},{"t":"2.000 m² đất vườn, đường nhựa thông QL13","p":750,"a":2000,"w":8,"r":"","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ket-tien-ban-gap-2000m2-dat-vuon-tphcm-mt-duong-nhua-thong-ql13-gia-750tr-19198721.html","oc":"Quang Minh","ward":"Tân Quan","lat":11.51032,"lng":106.62614,"k":"v","ppm":0.375},{"t":"450 m² đường Lê Duẩn","p":595,"a":450,"w":10,"r":"Lê Duẩn","tc":null,"d":"05/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-tai-le-duan-595-trieu-450-m2-phap-ly-day-du-19198558.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42623,"lng":106.65463,"k":"o","ppm":1.3222},{"t":"675 m² mặt tiền Lê Duẩn","p":5200,"a":675,"w":11.4,"r":"Lê Duẩn","tc":null,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-675m-thi-tran-chon-thanh-binh-phuoc-10062710.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42844,"lng":106.65824,"k":"o","ppm":7.7037},{"t":"225 m² có nhà, Cao Bá Quát","p":990,"a":225,"w":5,"r":"Cao Bá Quát","tc":60,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-nha-cao-ba-quat-225m2-tc-60m2-gia-chi-990-trieu-shr-chon-thanh-plaza-ql13-19169966.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43245,"lng":106.6603,"k":"o","ppm":4.4},{"t":"1.075 m², thổ cư 250 m², cổng KCN Minh Hưng 3","p":370,"a":1075,"w":25,"r":"Đường số 8","tc":250,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-ban-re-1075m2-tc-250m2-gia-370-trieu-shr-ngay-cong-kcn-minh-hung-3-ql13-19161564.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48399,"lng":106.62773,"k":"v","ppm":0.3442},{"t":"200 m² gần chợ Chơn Thành, thổ cư 60 m²","p":655,"a":200,"w":6.8,"r":"","tc":60,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-tt-cho-chon-thanh-200m2-mt6-8x26-tc-60m2-655-trieu-shr-san-kcn-becamex-19097308.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.4353,"lng":106.65625,"k":"o","ppm":3.275},{"t":"450 m² gần TTHC, thổ cư 120 m²","p":685,"a":450,"w":10,"r":"Gần QL13","tc":120,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-tthc-chon-thanh-450m2-10x45-tc-120m2-gia-685-trieu-so-san-kcn-becamex-3-phut-19055944.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42766,"lng":106.65464,"k":"o","ppm":1.5222},{"t":"900 m² mặt tiền Lê Duẩn, thổ cư 240 m²","p":680,"a":900,"w":20,"r":"Lê Duẩn","tc":240,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-gia-dinh-de-lai-900m2-20x45-tc-240m2-gia-680-trieu-shr-san-mt-le-duan-kcn-becamex-19144824.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42591,"lng":106.65343,"k":"v","ppm":0.7556},{"t":"430 m² cổng KCN Minh Hưng 3, thổ cư 100 m²","p":470,"a":430,"w":10,"r":"Gần QL13","tc":100,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-cong-kcn-minh-hung-3-dt-430m2-10x43-tc-100m2-470tr-so-san-ql13-chi-3-phut-19056099.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42807,"lng":106.65725,"k":"o","ppm":1.093},{"t":"225 m² gần TTHC, thổ cư 120 m²","p":685,"a":225,"w":5,"r":"Nguyễn Văn Linh","tc":120,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-gap-lo-dat-ngay-tthc-chon-thanh-225m2-5x45-tc-120m2-685-trieu-shr-canh-kcn-19099749.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43125,"lng":106.65528,"k":"o","ppm":3.0444},{"t":"450 m² mặt tiền 24 m, thổ cư 200 m²","p":685,"a":450,"w":10,"r":"Lê Duẩn","tc":200,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-mat-tien-24m-tthc-chon-thanh-450m2-10x45-tc-200m2-685-trieu-shr-canh-kcn-becamex-19135612.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43071,"lng":106.65401,"k":"o","ppm":1.5222},{"t":"225 m² tặng nhà, thổ cư 60 m²","p":990,"a":225,"w":5,"r":"Nguyễn Văn Linh","tc":60,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-gui-ban-dat-tang-nha-225m2-tc-60m2-gia-990-trieu-ngay-tthc-chon-thanh-ql-13-19176215.html","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42818,"lng":106.65712,"k":"o","ppm":4.4},{"t":"900 m² sát cổng KCN Minh Hưng 3, thổ cư 200 m²","p":320,"a":900,"w":20,"r":"Đường số 8","tc":200,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-sat-cong-kcn-minh-hung-3-gan-900m2-20-x-43-tc-200m2-shr-gia-320-trieu--19153115.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48419,"lng":106.62731,"k":"v","ppm":0.3556},{"t":"1.423 m² gần trường học","p":230,"a":1423,"w":25,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-1-400m2-25x56m-gia-230-trieu-shr-gan-truong-hoc-dan-cu-dong-14471233.html","oc":"Minh Thắng","ward":"Nha Bích","lat":11.49487,"lng":106.77149,"k":"v","ppm":0.1616},{"t":"3.800 m², thổ cư 100 m², gần chợ","p":150,"a":3800,"w":null,"r":"","tc":100,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-cat-lo-3-800m2-tho-cu-100m2-gia-150-trieu-so-rieng-dan-cu-dong-sat-cho-m3-15282902.html","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48221,"lng":106.62737,"k":"v","ppm":0.0395},{"t":"3.300 m² gần KCN","p":210,"a":3300,"w":null,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-can-ban-3-300m2-ngay-kcn-gia-ngop-nang-m5-15347862.html","oc":"Minh Thành","ward":"Chơn Thành","lat":11.40057,"lng":106.62533,"k":"v","ppm":0.0636},{"t":"2.600 m² gần chợ, trường, quốc lộ","p":180,"a":2600,"w":null,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-2-600m2-gia-180-trieu-sat-cho-truong-hoc-shr-sat-quoc-lo-tds2839-15933533.html","oc":"Minh Lập","ward":"Nha Bích","lat":11.51984,"lng":106.74029,"k":"v","ppm":0.0692},{"t":"1.000 m² (20x50) cạnh KCN Becamex","p":480,"a":1000,"w":20,"r":"","tc":null,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-1-000m2-20x50-gia-480-trieu-canh-kcn-becamex-quoc-lo-tt-hanh-chinh-tds386-15933597.html","oc":"Minh Thành","ward":"Chơn Thành","lat":11.40221,"lng":106.62632,"k":"v","ppm":0.48},{"t":"Lô góc 2 mặt tiền 1.675 m² sát KCN","p":350,"a":1675,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/thua-lo-kd-can-ban-gap-230m2-tho-cu-ngay-tthc-chon-thanh-becamex-id71272226","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47674,"lng":106.62371,"k":"v","ppm":0.209},{"t":"Lô 7 m đường ĐT751, gần sân banh Chảo Lửa","p":6600,"a":210,"w":7,"r":"ĐT751","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-lo-dat-7m-duong-dt-751-gan-san-banh-chao-lua-tx-chon-thanh-id71344468","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42847,"lng":106.6605,"k":"o","ppm":31.4286},{"t":"3.000 m² vườn bưởi, sổ riêng","p":280,"a":3000,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/can-tien-ban-gap-vuon-buoi-tp-dong-nai-3000m2-id71315881","oc":"Đồng Tiến","ward":"Đồng Tâm","lat":11.56971,"lng":106.98544,"k":"v","ppm":0.0933},{"t":"Ngang 10 m, 570 m² có thổ cư, gần Becamex","p":420,"a":570,"w":10,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/chican-ban-10m-ngang-dt-570m2-co-tho-cu-chon-thanh-gan-kcn-becamex-id71344027","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42791,"lng":106.65672,"k":"o","ppm":0.7368},{"t":"Đất xây trọ cạnh KCN Minh Hưng","p":450,"a":314.8,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-xay-tro-canh-kcn-minh-hung-gia-ngop-id71344030","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48399,"lng":106.63051,"k":"o","ppm":1.4295},{"t":"215 m² thổ cư Minh Hưng","p":350,"a":215,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ket-tien-ban-re-lo-dat-215m-minh-hung-dong-nai-tho-cu-gia-350trieu-id71344029","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48229,"lng":106.63172,"k":"o","ppm":1.6279},{"t":"300 m² thổ cư ngân hàng phát mãi","p":400,"a":300,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ngan-hang-phat-mai-mieng-dat-tho-cu-dt-300m2-gia-400-trieu-co-so-san-id71316034","oc":"Minh Lập","ward":"Nha Bích","lat":11.52447,"lng":106.73537,"k":"o","ppm":1.3333},{"t":"Mặt tiền đường 32 m","p":520,"a":250,"w":null,"r":"Đường 32 m","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/thanh-ly-dat-mat-tien-duong-32m-id71316027","oc":"Minh Lập","ward":"Nha Bích","lat":11.52182,"lng":106.73333,"k":"o","ppm":2.08},{"t":"Mặt tiền QL14 ngang 20 m, thổ cư 100 m²","p":6500,"a":1500,"w":20,"r":"Quốc lộ 14","tc":100,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-bu-dang-binh-phuoc/dat-mat-tien-quoc-lo-14-chieu-ngang-20-m-id71329499","oc":"Nghĩa Trung","ward":"Nghĩa Trung","lat":11.73716,"lng":107.0941,"k":"v","ppm":4.3333},{"t":"225 m² thổ cư gần KCN Minh Hưng 3","p":590,"a":225,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-gap-225m2-tho-cu-nam-ngay-vi-tri-trung-tam-dac-dia-kcn-m-hung-3-id71341925","oc":"Minh Long","ward":"Minh Hưng","lat":11.50029,"lng":106.66197,"k":"o","ppm":2.6222},{"t":"10 m mặt tiền Nguyễn Văn Linh view hồ","p":800,"a":360,"w":10,"r":"Nguyễn Văn Linh","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/soc-soc-ra-nhanh-10m-mt-nguyen-van-linh-view-ho-chi-800tr-id71319006","oc":"TT Tân Phú (Đồng Phú)","ward":"Đồng Phú","lat":11.48473,"lng":106.94311,"k":"o","ppm":2.2222},{"t":"226 m² đất ở đô thị trung tâm Chơn Thành","p":695,"a":226,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-o-do-thi-ngay-trung-tam-chon-thanh-chi-200-trieu-so-huu-ngay-id71201910","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42605,"lng":106.65536,"k":"o","ppm":3.0752},{"t":"215,9 m² đường bê tông, thôn Phú Nguyên","p":680,"a":215.9,"w":5,"r":"Đường bê tông","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-phu-rieng-binh-phuoc/chinh-chu-ban-dat-tai-phu-rieng-binh-phuoc-id71324792","oc":"Phú Riềng","ward":"Phú Riềng","lat":11.68945,"lng":106.98774,"k":"o","ppm":3.1496},{"t":"10x43 m mặt tiền 12 m sát chợ","p":470,"a":430,"w":10,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/can-tien-ban-gap-10x43m-430m2-dat-ngay-kcn-mt-12m-sat-cho-470tr-id71283779","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47681,"lng":106.62407,"k":"o","ppm":1.093},{"t":"275 m² trung tâm, giáp QL13","p":685,"a":275,"w":null,"r":"Gần QL13","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/tam-685tr-tim-dau-ra-275m2-ngay-tt-chon-thanh-ke-kcn-giap-ql13-id71254518","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42826,"lng":106.6523,"k":"o","ppm":2.4909},{"t":"220 m² trung tâm, cạnh KCN Becamex","p":680,"a":220,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-dat-trung-tam-chon-thanh-canh-kcn-becamex-gia-680tr-id71329386","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42771,"lng":106.65842,"k":"o","ppm":3.0909},{"t":"4.000 m² nhà vườn","p":330,"a":4000,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ban-nha-vuon-4000m2-gia-330tr-khong-phat-sinh-them-id71342146","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48177,"lng":106.62536,"k":"v","ppm":0.0825},{"t":"550 m² trung tâm, sát QL13","p":1350,"a":550,"w":null,"r":"Gần QL13","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/550m2-dat-trung-tam-chon-thanh-sat-ql13-ke-kcn-minh-hung-3-becamex-id71322641","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43091,"lng":106.6515,"k":"o","ppm":2.4545},{"t":"Mặt đường vành đai 24 (đang lên nhựa 12 m)","p":550,"a":450,"w":null,"r":"Vành đai 24","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-ngop-vanh-dai-so-24-dat-ngang-day-tro-duong-dang-len-nhua-12m-id71315594","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.48266,"lng":106.62623,"k":"o","ppm":1.2222},{"t":"130 m² mặt tiền đường nhựa gần Đảo Yến","p":800,"a":130.4,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/chinh-chu-het-gong-noi-thanh-ly-dat-dep-tai-dong-phu-binh-phuoc-cu-id71341485","oc":"TT Tân Phú (Đồng Phú)","ward":"Đồng Phú","lat":11.48785,"lng":106.94687,"k":"o","ppm":6.135},{"t":"550 m² (10x55), thổ cư 120 m²","p":670,"a":550,"w":10,"r":"Gần QL13","tc":120,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/550m2-670tr-trung-tam-chon-thanh-sat-ql13-ke-kcn-minh-hung-3-becamex-id71332700","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43324,"lng":106.65384,"k":"o","ppm":1.2182},{"t":"Đất xây trọ cách QL13 500 m","p":685,"a":550,"w":null,"r":"","tc":null,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-xay-tro-cach-ql13-dung-500m-giua-kcn-minh-hung-becamex-id71253333","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43278,"lng":106.65419,"k":"o","ppm":1.2455},{"t":"430 m² (10x43), thổ cư 100 m²","p":450,"a":430,"w":10,"r":"","tc":100,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/ket-tien-ban-gap-1137m2-dat-tho-cu-dan-cu-dong-ke-kcn-becamex-id71283751","oc":"Minh Hưng (Chơn Thành)","ward":"Minh Hưng","lat":11.47726,"lng":106.62445,"k":"o","ppm":1.0465},{"t":"200 m², thổ cư 50 m², mặt tiền nhựa 6 m","p":600,"a":200,"w":5,"r":"Đường nhựa 6 m","tc":50,"d":"07/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/chinh-chu-can-tien-ban-gap-lo-dat-200m-tho-cu-50m-so-hong-rieng-id71329337","oc":"Nha Bích","ward":"Nha Bích","lat":11.46665,"lng":106.75093,"k":"o","ppm":3.0},{"t":"Lô 5x30 mặt tiền đường nhựa, thổ cư 50 m²","p":500,"a":150,"w":5,"r":"Đường nhựa","tc":50,"d":"06/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-nen-mat-tien-duong-nhua-200m2-minh-lap-chon-thanh-id71303609","oc":"Minh Lập","ward":"Nha Bích","lat":11.51999,"lng":106.73695,"k":"o","ppm":3.3333},{"t":"487 m² mặt tiền Hoàng Văn Thụ, thổ cư 300 m²","p":1450,"a":487,"w":null,"r":"Hoàng Văn Thụ","tc":300,"d":"06/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-thi-xa-phuoc-long-binh-phuoc/ket-tien-can-ban-dat-tho-cu-tai-phuoc-long-id71302923","oc":"Phước Bình","ward":"Phước Bình","lat":11.79787,"lng":106.96085,"k":"o","ppm":2.9774},{"t":"1.007 m² có 200 m² thổ cư (ấp Minh Lập 6)","p":980,"a":1007,"w":null,"r":"","tc":200,"d":"06/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/chinh-chu-ban-dat-minh-lap-1-007-m-co-san-200-m-dat-tho-cu-id71302811","oc":"Nha Bích","ward":"Nha Bích","lat":11.46059,"lng":106.75013,"k":"v","ppm":0.9732},{"t":"329 m², thổ cư 50 m²","p":195,"a":329,"w":null,"r":"","tc":50,"d":"05/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-thi-xa-binh-long-binh-phuoc/can-ban-dat-chinh-chu-329m2-tho-cu-gia-195tr-id71300543","oc":"An Lộc (cũ)","ward":"Bình Long","lat":11.65159,"lng":106.60126,"k":"o","ppm":0.5927},{"t":"5x40, thổ cư 100 m² (ấp Thuận Tân)","p":219,"a":219.5,"w":5,"r":"","tc":100,"d":"04/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-dong-phu-binh-phuoc/chinh-chu-can-ban-nhanh-lo-dat-5x40-san-100m2-tho-cu-id71296584","oc":"Thuận Lợi","ward":"Thuận Lợi","lat":11.61176,"lng":106.9704,"k":"o","ppm":0.9977},{"t":"447 m² Phú Tân, thổ cư 100 m², giáp đường bê tông","p":1230,"a":447.7,"w":null,"r":"Đường bê tông","tc":100,"d":"03/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-phu-rieng-binh-phuoc/ban-dat-phu-tan-phu-rieng-binh-phuoc-id71294594","oc":"Phú Riềng","ward":"Phú Riềng","lat":11.6933,"lng":106.98656,"k":"o","ppm":2.7474},{"t":"2.143 m², có thương lượng","p":1300,"a":2143,"w":null,"r":"","tc":null,"d":"26/10/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-loc-ninh-binh-phuoc/ban-gap-co-thuong-luong-nhe-id71287107","oc":"Lộc Hưng","ward":"Lộc Hưng","lat":11.76028,"lng":106.55802,"k":"v","ppm":0.6066},{"t":"5.300 m² mặt tiền QL13","p":11000,"a":5300,"w":null,"r":"Quốc lộ 13","tc":null,"d":"25/10/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-loc-ninh-binh-phuoc/dat-mat-tien-quoc-lo-13-xa-loc-tan-loc-ninh-binh-phuoc-5300m2-12-5ty-id70939184","oc":"Lộc Tấn","ward":"Lộc Tấn","lat":11.9573,"lng":106.63322,"k":"v","ppm":2.0755},{"t":"892 m² đất ở nông thôn, cách đường HCM 1 km","p":550,"a":892,"w":10,"r":"","tc":100,"d":"06/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-gap-dat-huyen-bu-dang-xa-minh-hung-892m2-ont-gia-550-trieu-co-tl--19008890.html","oc":"Minh Hưng (Bù Đăng)","ward":"Bù Đăng","lat":11.85285,"lng":107.20366,"k":"v","ppm":0.6166},{"t":"256 m² đường Đoàn Đức Thái","p":420,"a":256,"w":5,"r":"Đoàn Đức Thái","tc":null,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-sieu-dep-tai-duc-lieu-binh-phuoc-cu-tp-dong-nai-xem-la-me-chot-la-vui--19070296.html","oc":"Đức Liễu","ward":"Nghĩa Trung","lat":11.78707,"lng":107.11707,"k":"o","ppm":1.6406},{"t":"250 m² có 100 m² thổ cư","p":305,"a":250,"w":5,"r":"","tc":100,"d":"04/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chinh-chu-ban-dt-250m2-co-100m-tho-cu-gia-310-trieu-18747659.html","oc":"Nghĩa Trung","ward":"Nghĩa Trung","lat":11.73683,"lng":107.0977,"k":"o","ppm":1.22},{"t":"100 m² gần chợ, UBND, đường ĐT760","p":550,"a":100,"w":5,"r":"ĐT760","tc":null,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/d-at-tp-dong-nai-so-san-550tr-khong-phat-sinh-ngay-cho-sieu-thi-uy-ban-khu-dan-cu-18899463.html","oc":"Bom Bo","ward":"Bom Bo","lat":11.88433,"lng":107.18384,"k":"o","ppm":5.5},{"t":"105 m² trung tâm hành chính, đường ĐT760","p":540,"a":105,"w":5,"r":"ĐT760","tc":null,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/d-at-trung-tam-hanh-chinh-so-san-540tr-nhan-so-ngay-cho-sieu-thi-uy-ban-khu-dan-cu-18923221.html","oc":"Bom Bo","ward":"Bom Bo","lat":11.8888,"lng":107.18345,"k":"o","ppm":5.1429},{"t":"105 m² mặt đường 13 m có vỉa hè","p":700,"a":105,"w":5,"r":"Đường nhựa 13 m","tc":null,"d":"03/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-dep-mat-duong-13m-via-he-bom-bo-dong-nai-bu-dang-binh-phuoc-cu-700-trieu-16979902.html","oc":"Bom Bo","ward":"Bom Bo","lat":11.88974,"lng":107.18084,"k":"o","ppm":6.6667},{"t":"2 lô 744 m² liền kề, thổ cư 200 m²","p":290,"a":744,"w":10,"r":"Đường bê tông","tc":200,"d":"17/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-2-lo-tho-cu-743-6m2-lien-ke-ngang-10m-gia-ngop-290trd-14270522.html","oc":"Thống Nhất (Bù Đăng)","ward":"Phước Sơn","lat":11.93267,"lng":107.25692,"k":"v","ppm":0.3898},{"t":"1,1 ha vườn điều view hồ Sơn Lợi","p":2000,"a":11320,"w":null,"r":"Ven hồ Sơn Lợi","tc":null,"d":"11/08/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/-1-1-hecta-vuon-dieu-thuc-te-gan-2hec-235m-mat-tien-view-ho-son-loi-cuc-ki-dep-1-7-ty-14583659.html","oc":"Thọ Sơn","ward":"Thọ Sơn","lat":11.6956,"lng":107.337,"k":"v","ppm":0.1767},{"t":"1.000 m² mặt tiền đường gần quốc lộ, KCN","p":165,"a":1000,"w":10,"r":"","tc":null,"d":"24/09/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/3000m2-mat-tien-duong-gan-quoc-lo-gan-kcn-chi-165-trieu-so-dong-phu-dong-nai-19094378.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.4253,"lng":107.02045,"k":"v","ppm":0.165},{"t":"785 m², thổ cư 100 m²","p":1200,"a":785,"w":10,"r":"","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/minh-chinh-chu-ban-lo-dat-dong-tam-dong-phu-binh-phuoc-15836610.html","oc":"Đồng Tâm","ward":"Đồng Tâm","lat":11.53889,"lng":107.03366,"k":"v","ppm":1.5287},{"t":"1.000 m² trồng bưởi, đường quy hoạch 12 m","p":255,"a":1000,"w":31,"r":"Đường QH 12 m","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/1000m2-dat-31x33-duong-qh-12m-dang-trong-full-buoi-da-xanh-18954692.html","oc":"Đồng Tiến","ward":"Đồng Tâm","lat":11.56305,"lng":106.98547,"k":"v","ppm":0.255},{"t":"304 m² mặt tiền đường xuyên tâm 32 m","p":600,"a":304,"w":23,"r":"Đường xuyên tâm","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dat-mat-tien-duong-xuyen-tam-300m2-cap-sat-cong-nghiep-tan-tien-1-2-18951646.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.354,"lng":106.96834,"k":"o","ppm":1.9737},{"t":"Mặt tiền ĐH Tân Phước, thổ cư 100 m²","p":350,"a":250,"w":5,"r":"ĐH Tân Phước","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/mat-tien-duong-dh-tan-phuoc-dong-phu-15513935.html","oc":"Tân Phước","ward":"Đồng Tâm","lat":11.50183,"lng":107.05726,"k":"o","ppm":1.4},{"t":"Mặt tiền Tuyến 3, ngã 4 Tân Hòa","p":1050,"a":250,"w":5,"r":"Tuyến 3","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-mat-tien-tuyen-3-ngay-nga-4-tan-hoa--16170380.html","oc":"Tân Hòa","ward":"Tân Lợi","lat":11.36668,"lng":107.03397,"k":"o","ppm":4.2},{"t":"Đường nhựa 32 m, 5x50, thổ cư 100 m²","p":330,"a":250,"w":5,"r":"Đường liên xã 32 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/duong-nhua-32m-ngay-khu-dan-cu-5x50m-co-100tc-16433412.html","oc":"Thuận Lợi","ward":"Thuận Lợi","lat":11.606,"lng":106.97157,"k":"o","ppm":1.32},{"t":"Mặt tiền ĐT753, 5x70, thổ cư 100 m²","p":700,"a":360,"w":5,"r":"ĐT753","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/dt-753-dien-tich-5x70m-co-100m2-tho-cu-18254976.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.42749,"lng":107.01126,"k":"o","ppm":1.9444},{"t":"Mặt tiền đường Thanh Niên 42 m","p":680,"a":200,"w":5,"r":"Đường Thanh Niên","tc":118,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-mat-tien-duong-thanh-nien-42m-17934577.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41245,"lng":106.90727,"k":"o","ppm":3.4},{"t":"1,3 ha gần UBND xã Tân Lợi, thổ cư 150 m²","p":3200,"a":13000,"w":35,"r":"Đường bê tông","tc":150,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/1-3ha-ngay-gan-ub-xa-tan-loi-dong-phu-16714686.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.42135,"lng":107.01818,"k":"v","ppm":0.2462},{"t":"400 m² đường nhựa gần UBND Tân Hưng","p":490,"a":400,"w":5,"r":"Đường liên xã","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-tho-cu-duong-nhua-ngay-uy-ban-tan-hung-15257388.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41766,"lng":106.90322,"k":"o","ppm":1.225},{"t":"3.700 m² mặt tiền Tuyến 3, thổ cư 200 m²","p":4800,"a":3700,"w":10,"r":"Tuyến 3","tc":200,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-3-700m2-dat-mat-tien-tuyen-so-3-dong-phu-18991912.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34995,"lng":106.96562,"k":"v","ppm":1.2973},{"t":"Mặt tiền Tuyến 3, KCN VSIP","p":880,"a":200,"w":5,"r":"Tuyến 3","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-mat-tien-tuyen-3-khu-cong-nghiep-vsip-dong-nam-dong-phu-17531637.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35286,"lng":106.96552,"k":"o","ppm":4.4},{"t":"Mặt tiền Tuyến 3, 5x40","p":690,"a":200,"w":5,"r":"Tuyến 3","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-mat-tien-tuyen-so-3-dong-phu-5x40m-chi-690tr-19019003.html","oc":"Tân Hòa","ward":"Tân Lợi","lat":11.36611,"lng":107.0334,"k":"o","ppm":3.45},{"t":"4,2 sào gần chợ Tân Phước","p":850,"a":4200,"w":9,"r":"Cách ĐT753 500 m","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-4-2sao-chi-850tr-ngay-cho-tan-phuoc-dong-phu-17980088.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41699,"lng":106.90778,"k":"v","ppm":0.2024},{"t":"1.050 m² cạnh KCN Đông Nam Đồng Phú","p":690,"a":1050,"w":22,"r":"Đường liên xã","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-sao-ngang-lon-ngay-canh-kcn-dong-nam-dong-phu-17572415.html","oc":"Tân Hòa","ward":"Tân Lợi","lat":11.37451,"lng":107.03192,"k":"v","ppm":0.6571},{"t":"5x36, thổ cư 100 m², gần KCN Bắc Đồng Phú","p":580,"a":166,"w":5,"r":"Đường nhựa 42 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/5x36-100tc-ngay-kcn-bac-dong-phu-b-18954661.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.42249,"lng":107.01837,"k":"o","ppm":3.494},{"t":"Mặt tiền đường xuyên tâm 5x40","p":500,"a":200,"w":5,"r":"Đường xuyên tâm","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-30-lo-dat-mat-tien-duong-xuyen-tam-tan-tien-dong-phu-16643933.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35149,"lng":106.96883,"k":"o","ppm":2.5},{"t":"Đường vành đai hồ Suối Giai","p":680,"a":200,"w":5,"r":"Vành đai hồ Suối Giai","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-vanh-dai-ho-suoi-giai-dong-phu-16042274.html","oc":"TT Tân Phú (Đồng Phú)","ward":"Đồng Phú","lat":11.48773,"lng":106.94483,"k":"o","ppm":3.4},{"t":"Mặt tiền Tuyến 3, KCN Đông Nam Đồng Phú","p":780,"a":200,"w":5,"r":"Tuyến 3","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/mat-tien-tuyen-so-3-khu-cong-nghiep-dong-nam-dong-phu-15313250.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35175,"lng":106.97503,"k":"o","ppm":3.9},{"t":"Lô góc 2 mặt tiền ĐT753, thổ cư 200 m²","p":1600,"a":788,"w":7,"r":"ĐT753","tc":200,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-goc-2-mat-tien-dt-753-7x58m-co-san-200m2-tho-cu-18014948.html","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41643,"lng":106.90514,"k":"v","ppm":2.0305},{"t":"Sát tuyến số 4, thổ cư 100 m²","p":350,"a":250,"w":5,"r":"Gần Tuyến 4","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-ngay-sat-sat-tuyen-so-4-chi-350tr-18935705.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.4258,"lng":107.01825,"k":"o","ppm":1.4},{"t":"1,9 ha mặt tiền Tuyến 3","p":11000,"a":19000,"w":16,"r":"Tuyến 3","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-1ha9-mat-tien-tuyen-3-vao-khu-cong-nghiep-4200ha-dong-nam-dong-phu-18482262.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34916,"lng":106.96478,"k":"v","ppm":0.5789},{"t":"5x50 đường 42 m, thổ cư 100 m²","p":490,"a":220,"w":5,"r":"Đường nhựa 42 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-lo-dat-5x50m-100tc-duong-42m-18921022.html","oc":"Tân Lợi (Đồng Phú)","ward":"Tân Lợi","lat":11.4229,"lng":107.01765,"k":"o","ppm":2.2273},{"t":"5x50 gần KCN Tân Tiến, thổ cư 100 m²","p":775,"a":250,"w":5,"r":"Đường nhựa 29 m","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/ban-dat-5x50m-ngay-khu-cong-nghiep-tan-tien-thanh-phuong-18035703.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.35445,"lng":106.96716,"k":"o","ppm":3.1},{"t":"5x40 mặt tiền đường xuyên tâm 32 m","p":560,"a":200,"w":5,"r":"Đường xuyên tâm","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/5x40m-dat-mat-tien-duong-xuyen-tam-dong-phu-binh-phuoc-17745183.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34574,"lng":106.97299,"k":"o","ppm":2.8},{"t":"5x50 mặt tiền đường xuyên tâm","p":500,"a":250,"w":5,"r":"Đường xuyên tâm","tc":100,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/mat-tien-duong-xuyen-tam-di-qua-bon-tuyen-dong-phu-16997220.html","oc":"Tân Tiến (Đồng Phú)","ward":"Đồng Phú","lat":11.34699,"lng":106.96593,"k":"o","ppm":2.0},{"t":"Mặt tiền QL14, 10x83","p":1800,"a":830,"w":10,"r":"Quốc lộ 14","tc":null,"d":"07/11/2026","s":"alonhadat.com.vn","u":"https://alonhadat.com.vn/chu-can-tien-ban-gap-mat-tien-ql-14-dong-tien-15115403.html","oc":"Đồng Tiến","ward":"Đồng Tâm","lat":11.56318,"lng":106.98298,"k":"v","ppm":2.1687},{"t":"2.000 m² ngang 30 m, nhánh ĐH502, sổ sẵn","p":595,"a":2000,"w":30,"r":"Nhánh ĐH502","tc":null,"d":"24/10/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-thi-xa-dong-xoai-binh-phuoc/2000m2-tien-hung-tp-dong-xoai-595tr-so-san-id71098426","oc":"Tiến Hưng (Đồng Xoài)","ward":"Bình Phước","lat":11.54591,"lng":106.86214,"k":"v","ppm":0.2975},{"t":"272 m² đất xây trọ giữa KCN Minh Hưng và Becamex","p":400,"a":272,"w":null,"r":"","tc":null,"d":"09/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-du-an-khu-dan-cu-huyen-chon-thanh-binh-phuoc/400tr-so-huu-lo-dat-xay-tro-giua-kcn-minh-hung-becamex-chon-thanh-id71344028","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.42658,"lng":106.6578,"k":"o","ppm":1.4706},{"t":"1.000 m² đất vườn, mặt tiền đường 12 m","p":350,"a":1000,"w":10,"r":"Đường 12 m","tc":null,"d":"09/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-nong-nghiep-kho-bai-huyen-dong-phu-binh-phuoc/dat-vuon-1000m2-mat-tien-duong-12m-o-dong-phu-binh-phuoc-id71342370","oc":"Tân Hưng (Đồng Phú)","ward":"Tân Lợi","lat":11.41388,"lng":106.90572,"k":"v","ppm":0.35},{"t":"240 m² khu tái định cư Nha Bích, full thổ cư","p":450,"a":240,"w":10,"r":"","tc":240,"d":"09/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/chu-gui-ban-lo-tdc-nha-bich-dt-240m2-full-tho-cu-gia-chi-450-trieu-id71349004","oc":"Nha Bích","ward":"Nha Bích","lat":11.47154,"lng":106.75073,"k":"o","ppm":1.875},{"t":"250 m² mặt tiền Phùng Hưng, thổ cư 100 m²","p":395,"a":250,"w":null,"r":"Phùng Hưng","tc":100,"d":"09/11/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-tho-cu-huyen-chon-thanh-binh-phuoc/dat-mat-tien-duong-kinh-doanh-da-nganh-nghe-gia-re-id71346649","oc":"TT Chơn Thành (Hưng Long)","ward":"Chơn Thành","lat":11.43049,"lng":106.65816,"k":"o","ppm":1.58},{"t":"1.000 m² đất sào sát QL14C","p":299,"a":1000,"w":null,"r":"Quốc lộ 14C","tc":null,"d":"23/10/2026","s":"muaban.net","u":"https://muaban.net/bat-dong-san/ban-dat-nong-nghiep-kho-bai-huyen-loc-ninh-binh-phuoc/ban-nhanh-lo-dat-sao-1000m2-ngay-sat-quoc-lo-14c-id71282543","oc":"Lộc Thành","ward":"Lộc Thành","lat":11.9478,"lng":106.48959,"k":"v","ppm":0.299}];
 const WARDS = [
  ["Bình Phước","P","Đồng Xoài",11.5375,106.8995],["Đồng Xoài","P","Đồng Xoài",11.4950,106.8620],
  ["Minh Hưng","P","Chơn Thành",11.4870,106.6350],["Chơn Thành","P","Chơn Thành",11.4290,106.6560],["Nha Bích","X","Chơn Thành",11.4950,106.7450],
@@ -250,7 +351,7 @@ const WARDS = [
  ["Đồng Phú","P","Đồng Phú",11.4300,106.9550],["Thuận Lợi","X","Đồng Phú",11.6000,106.9700],["Đồng Tâm","X","Đồng Phú",11.5350,107.0250],["Tân Lợi","X","Đồng Phú",11.4050,107.0000],
  ["Phước Sơn","X","Bù Đăng",11.9400,107.2700],["Nghĩa Trung","X","Bù Đăng",11.7600,107.1100],["Bù Đăng","X","Bù Đăng",11.8100,107.2300],["Thọ Sơn","X","Bù Đăng",11.7000,107.3400],["Đăk Nhau","X","Bù Đăng",11.9500,107.3700],["Bom Bo","X","Bù Đăng",11.8800,107.1800]
 ].map((w,i)=>({id:"w"+i,name:w[0],kind:w[1],old:w[2],lat:w[3],lng:w[4]}));
-const TYPES={o:{label:"Lô đất ở (≤ 700 m²)",short:"lô đất ở",color:"--t-o"},v:{label:"Đất vườn, diện tích lớn",short:"đất vườn",color:"--t-v"}};
+const TYPES={o:{label:"Lô đất ở (≤ 700 m²)",seg:"Lô đất ở",short:"lô đất ở",color:"--t-o"},v:{label:"Đất vườn, diện tích lớn",seg:"Đất vườn, lô lớn",short:"đất vườn",color:"--t-v"}};
 const STEPS=[2000,3000,5000,8000,12000,20000], MIN=5;
 
 const $=s=>document.querySelector(s);
@@ -263,11 +364,12 @@ const fmtPpm=v=>v>=1?nf1.format(v)+" tr":nf0.format(v*1000)+" nghìn";
 const fmtMoney=tr=>tr>=1000?nf2.format(tr/1000)+" tỷ":nf0.format(tr)+" triệu";
 const fmtDist=m=>m<1000?nf0.format(Math.round(m/10)*10)+" m":nf1.format(m/1000)+" km";
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const smooth=()=>matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth";
 function distM(a,b){const R=6371000,k=Math.PI/180,dLa=(b.lat-a.lat)*k,dLo=(b.lng-a.lng)*k;const h=Math.sin(dLa/2)**2+Math.cos(a.lat*k)*Math.cos(b.lat*k)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
 function pct(a,p){if(!a.length)return NaN;const s=[...a].sort((x,y)=>x-y),i=(s.length-1)*p,lo=Math.floor(i),hi=Math.ceil(i);return s[lo]+(s[hi]-s[lo])*(i-lo)}
 const nearestWard=pt=>WARDS.reduce((a,w)=>distM(pt,w)<distM(pt,a)?w:a,WARDS[0]);
 
-$("#nAll").textContent=DATA.length;
+$("#nAll").textContent=nf0.format(DATA.length);
 const countBy={}; DATA.forEach(d=>countBy[d.ward]=(countBy[d.ward]||0)+1);
 
 // ---------- Trạng thái (chỉ lưu trên máy người xem) ----------
@@ -283,7 +385,7 @@ const persist=()=>{store.set("gdqg2_pins",pins.filter(p=>!p.ex));store.set("gdqg
 const sel=$("#selWard"), groups={};
 WARDS.forEach(w=>(groups[w.old]=groups[w.old]||[]).push(w));
 Object.keys(groups).forEach(g=>{const og=document.createElement("optgroup");og.label="Trước đây: "+g;
-  groups[g].forEach(w=>{const o=document.createElement("option");o.value=w.id;const n=countBy[w.name]||0;o.textContent=wardLabel(w)+(n?` · ${n} tin`:" · chưa có tin");og.appendChild(o)});sel.appendChild(og)});
+  groups[g].forEach(w=>{const o=document.createElement("option");o.value=w.id;const n=countBy[w.name]||0;o.textContent=wardLabel(w)+(n?` (${n} tin)`:" (chưa có tin)");og.appendChild(o)});sel.appendChild(og)});
 sel.value=state.ward.id;
 
 // ---------- Bản đồ ----------
@@ -295,7 +397,7 @@ tiles.on("tileload",()=>{tileErr=0;$("#tileNote").hidden=true});
 tiles.addTo(map);
 const lyWard=L.layerGroup().addTo(map), lyData=L.layerGroup().addTo(map), lyPin=L.layerGroup().addTo(map);
 let circle=null;
-const pinSvg=c=>`<svg viewBox="0 0 26 26" width="26" height="26"><path d="M13 1.5c-4.7 0-8.5 3.6-8.5 8.2 0 6.1 8.5 14.8 8.5 14.8s8.5-8.7 8.5-14.8c0-4.6-3.8-8.2-8.5-8.2z" fill="${c}" stroke="${css('--surface')}" stroke-width="1.5"/><circle cx="13" cy="9.8" r="3.2" fill="${css('--surface')}"/></svg>`;
+const pinSvg=c=>`<svg viewBox="0 0 28 34" width="28" height="34"><path d="M14 1.5C7.6 1.5 2.5 6.4 2.5 12.6 2.5 20.8 14 32.5 14 32.5S25.5 20.8 25.5 12.6C25.5 6.4 20.4 1.5 14 1.5z" fill="${c}" stroke="#fff" stroke-width="2"/><circle cx="14" cy="12.6" r="4.2" fill="#fff"/></svg>`;
 
 function drawStatic(){
   lyWard.clearLayers();
@@ -306,8 +408,8 @@ function drawStatic(){
   lyData.clearLayers();
   DATA.forEach(d=>{
     const on=d.k===state.type, c=css(TYPES[d.k].color);
-    L.circleMarker([d.lat,d.lng],{radius:on?7:5,color:c,weight:on?1.5:1,fillColor:c,fillOpacity:on?.75:.25,opacity:on?1:.45})
-     .bindTooltip(`${esc(d.t)}<br>${fmtPpm(d.ppm)}/m² · ${nf0.format(d.a)} m² · ${fmtMoney(d.p)}`)
+    L.circleMarker([d.lat,d.lng],{radius:on?7:4.5,color:on?css("--surface"):c,weight:on?1.5:1,fillColor:c,fillOpacity:on?.9:.22,opacity:on?1:.4})
+     .bindTooltip(`<b>${fmtPpm(d.ppm)}/m²</b><br>${esc(d.t)}<br>${nf0.format(d.a)} m², ${fmtMoney(d.p)}`)
      .addTo(lyData);
   });
 }
@@ -315,12 +417,12 @@ function drawPins(effR){
   lyPin.clearLayers();
   pins.forEach((p,i)=>{
     const act=i===state.active;
-    L.marker([p.lat,p.lng],{icon:L.divIcon({className:"pinicon",html:pinSvg(css(act?"--soil":"--muted")),iconSize:[26,26],iconAnchor:[13,25]}),title:"Ghim "+(i+1),zIndexOffset:act?1000:0})
+    L.marker([p.lat,p.lng],{icon:L.divIcon({className:"pinicon",html:pinSvg(css(act?"--soil":"--muted")),iconSize:[28,34],iconAnchor:[14,33]}),title:"Ghim "+(i+1),zIndexOffset:act?1000:0})
      .on("click",()=>{state.active=i;refresh()}).addTo(lyPin);
   });
   if(circle){map.removeLayer(circle);circle=null}
   const p=pins[state.active];
-  if(p&&effR) circle=L.circle([p.lat,p.lng],{radius:effR,color:css("--soil"),weight:1.5,fillColor:css("--soil"),fillOpacity:.05,dashArray:"5 5",interactive:false}).addTo(map);
+  if(p&&effR) circle=L.circle([p.lat,p.lng],{radius:effR,color:css("--soil"),weight:1.5,fillColor:css("--soil"),fillOpacity:.06,dashArray:"4 6",interactive:false}).addTo(map);
 }
 
 // ---------- Thả ghim ----------
@@ -349,14 +451,14 @@ $("#btnAdd").onclick=()=>{
   const c=parseCoords(v);
   if(!c){
     say(/goo\.gl|maps\.app/.test(v)
-      ? "<b>Link chia sẻ (maps.app.goo.gl) không chứa toạ độ</b>, nên app chưa đọc được. Trên Google Maps:<ol><li>Nhấn giữ vào vị trí đến khi hiện ghim đỏ.</li><li>Chạm vào dãy toạ độ ở ô tìm kiếm phía trên để sao chép.</li><li>Dán vào đây và bấm Thả ghim.</li></ol>"
+      ? "<b>Link chia sẻ (maps.app.goo.gl) không chứa toạ độ</b>, nên app chưa đọc được. Trên Google Maps:<ol><li>Nhấn giữ vào vị trí đến khi hiện ghim đỏ.</li><li>Chạm vào dãy toạ độ ở ô tìm kiếm phía trên để sao chép.</li><li>Dán vào đây rồi bấm Thả ghim.</li></ol>"
       : "Chưa đọc được toạ độ. Dán dạng <b>11.4300, 106.6560</b> (vĩ độ trước, kinh độ sau).");
     return;
   }
   if(c[0]<10.4||c[0]>12.6||c[1]<105.8||c[1]>108){say("Toạ độ này nằm ngoài TP. Đồng Nai. Kiểm tra lại thứ tự vĩ độ, kinh độ.");return}
   $("#coordIn").value=""; $("#coordIn").blur();
   addPin(c[0],c[1],true);
-  setTimeout(()=>$("#resultCard").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}),150);
+  setTimeout(()=>$("#resultCard").scrollIntoView({behavior:smooth(),block:"start"}),150);
 };
 $("#coordIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("#btnAdd").click()});
 sel.onchange=()=>{state.ward=WARDS.find(w=>w.id===sel.value);persist();map.setView([state.ward.lat,state.ward.lng],13);
@@ -382,14 +484,14 @@ function onFix(pos){
     const top=near.slice(0,8);
     if(top.length) map.fitBounds(L.latLngBounds([[la,ln],...top.map(x=>[x.d.lat,x.d.lng])]).pad(0.15),{maxZoom:15});
     else map.setView([la,ln],15);
-    const accTxt=`Sai số khoảng ±${fmtDist(acc)}`;
+    const accTxt=`sai số khoảng ±${fmtDist(acc)}`;
     const nearTxt=top.length?` Tin rao gần nhất cách bạn khoảng <b>${fmtDist(top[0].dist)}</b>; bản đồ đã thu nhỏ để hiện ${top.length} tin gần nhất.`:"";
     if(!inRegion(la,ln)){
       showMsg(`<b>Đã thấy vị trí của bạn</b> (${accTxt}), nhưng nơi này nằm ngoài khu Bình Phước cũ nên app chưa có dữ liệu giá.${nearTxt}`);
     } else {
       showMsg(`<b>Đã xác định vị trí của bạn</b> (${accTxt}).${nearTxt}<br><button type="button" class="btn primary" id="btnHere">Xem giá tại vị trí này</button>`);
       $("#btnHere").onclick=()=>{msgBox.hidden=true;addPin(lastFix.lat,lastFix.lng,false);fitToCircle();
-        setTimeout(()=>$("#resultCard").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}),150)};
+        setTimeout(()=>$("#resultCard").scrollIntoView({behavior:smooth(),block:"start"}),150)};
     }
   }
 }
@@ -418,11 +520,11 @@ $("#btnLoc").onclick=()=>{
   watchId=navigator.geolocation.watchPosition(onFix,onErr,{enableHighAccuracy:true,maximumAge:10000,timeout:20000});
 };
 
-// ---------- Chips loại đất ----------
+// ---------- Chọn loại đất ----------
 function drawChips(){
   const el=$("#typeChips"); el.innerHTML="";
-  Object.entries(TYPES).forEach(([k,t])=>{const b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed",String(k===state.type));
-    b.innerHTML=`<i class="dot" style="background:var(${t.color})"></i>${t.label}`;b.onclick=()=>{state.type=k;persist();drawChips();drawStatic();refresh()};el.appendChild(b)});
+  Object.entries(TYPES).forEach(([k,t])=>{const b=document.createElement("button");b.type="button";b.setAttribute("aria-pressed",String(k===state.type));b.title=t.label;
+    b.innerHTML=`<i class="dot" style="background:var(${t.color})"></i>${t.seg}`;b.onclick=()=>{state.type=k;persist();drawChips();drawStatic();refresh()};el.appendChild(b)});
 }
 
 // ---------- Tính giá ----------
@@ -434,70 +536,78 @@ function nearby(p,type){
 let estArea=null;
 function renderResult(){
   const box=$("#result"), p=pins[state.active];
-  if(!p){box.innerHTML='<p class="empty">Chưa có ghim. Dán toạ độ hoặc chạm vào bản đồ.</p>';drawPins(0);return}
+  if(!p){box.innerHTML='<div class="card"><p class="empty">Chưa có ghim. Chạm vào bản đồ hoặc dán toạ độ để xem giá.</p></div>';drawPins(0);return}
   const t=TYPES[state.type], {r,h}=nearby(p,state.type), w=nearestWard(p);
   drawPins(h.length?r:0);
   let html="";
-  if(p.ex) html+=`<div class="warnbox">Đây là ghim ví dụ ở trung tâm Chơn Thành. Dán toạ độ của bạn để xem giá nơi bạn đứng.</div>`;
-  html+=`<div class="sub" style="margin:0">Ghim gần <b>${wardLabel(w)}</b> · <span style="font-family:var(--f-mono)">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</span></div>`;
+  if(p.ex) html+=`<div class="warnbox">Đây là ghim ví dụ ở trung tâm Chơn Thành. Chạm vào bản đồ hoặc dán toạ độ của bạn để xem giá nơi bạn quan tâm.</div>`;
+  const where=`<div class="where"><span>Gần <b>${wardLabel(w)}</b></span><span>${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</span></div>`;
   if(!h.length){
     const o=nearby(p,state.type==="o"?"v":"o");
-    html+=`<p class="empty">Chưa có tin <b>${t.short}</b> nào trong ${fmtDist(r)} quanh ghim.${o.h.length?` Thử chọn loại "${TYPES[state.type==="o"?"v":"o"].label}" (có ${o.h.length} tin).`:" Khu vực này chưa có dữ liệu."}</p>`;
+    html+=`<div class="readout">${where}<p class="label" style="margin:0">Chưa có tin <b>${t.short}</b> nào trong ${fmtDist(r)} quanh ghim.${o.h.length?` Thử chọn loại "${TYPES[state.type==="o"?"v":"o"].seg}" (có ${o.h.length} tin).`:" Khu vực này chưa có dữ liệu."}</p></div>`;
     box.innerHTML=html;return;
   }
   const v=h.map(x=>x.ppm), med=pct(v,.5), q1=pct(v,.25), q3=pct(v,.75), lo=Math.min(...v), hi=Math.max(...v);
   const span=(hi-lo)||1, X=val=>((val-lo)/span*100).toFixed(1)+"%";
-  if(r>=8000) html+=`<div class="warnbox"><b>Khu vực này còn thiếu dữ liệu.</b> Gần ghim có rất ít tin ${t.short}, nên app phải lấy tin cách xa tới ${fmtDist(r)} (xem cột "cách ~" bên dưới). Chỉ dùng con số này để tham khảo sơ bộ.</div>`;
+  if(r>=8000) html+=`<div class="warnbox"><b>Khu vực này còn thiếu dữ liệu.</b> Gần ghim có rất ít tin ${t.short}, nên app phải lấy tin cách xa tới ${fmtDist(r)}. Chỉ dùng con số này để tham khảo sơ bộ.</div>`;
   else if(r>STEPS[0]) html+=`<div class="warnbox">Trong ${fmtDist(STEPS[0])} quanh ghim có ít tin ${t.short}, nên app đã nới phạm vi tới <b>${fmtDist(r)}</b>. Giá có thể lệch so với đúng vị trí của bạn.</div>`;
-  const big=med>=1?`${nf1.format(med)} <small>triệu/m²</small>`:`${nf0.format(med*1000)} <small>nghìn/m²</small>`;
-  html+=`<div><div class="big">${big}</div>
-    <div class="sub">Trung vị giá rao · ${t.label} · ${h.length} tin trong ${fmtDist(r)}${h.length<MIN?" · ít dữ liệu, chỉ nên tham khảo":""}</div></div>`;
-  if(h.length>=3) html+=`<div><div class="bar" aria-hidden="true"><div class="track"></div>${v.map(x=>`<div class="tick" style="left:${X(x)}"></div>`).join("")}
+  const big=med>=1?`${nf1.format(med)}<small>triệu/m²</small>`:`${nf0.format(med*1000)}<small>nghìn/m²</small>`;
+  html+=`<div class="readout" aria-live="polite">${where}
+    <div><p class="label">Giá rao trung vị, ${t.short}</p><div class="big">${big}</div>
+      <div class="basis${h.length<MIN?" thin":""}">Tính từ ${h.length} tin trong bán kính ${fmtDist(r)}${h.length<MIN?". Ít dữ liệu, chỉ nên tham khảo.":""}</div></div>`;
+  if(h.length>=3) html+=`<div><div class="ruler" aria-hidden="true"><div class="track"></div>${v.map(x=>`<div class="tick" style="left:${X(x)}"></div>`).join("")}
       <div class="iqr" style="left:${X(q1)};width:calc(${X(q3)} - ${X(q1)})"></div><div class="med" style="left:${X(med)}"></div></div>
-      <div class="scale"><span>${fmtPpm(lo)}</span><span>${fmtPpm(hi)}</span></div></div>`;
+      <div class="scale"><span>Thấp nhất ${fmtPpm(lo)}</span><span>Cao nhất ${fmtPpm(hi)}</span></div></div>`;
   html+=`<div class="stats">
       <div class="stat"><span>Phổ biến từ</span><b>${fmtPpm(q1)}</b></div>
       <div class="stat"><span>Đến</span><b>${fmtPpm(q3)}</b></div>
-      <div class="stat"><span>Tin gần nhất</span><b>${fmtDist(h[0].dist)}</b></div></div>
-    <div class="est"><label for="areaIn">Ước tính cho lô của bạn (m²)</label><output id="estOut">—</output>
-      <input id="areaIn" type="number" min="1" inputmode="decimal" placeholder="${state.type==="o"?"vd 250":"vd 2000"}" value="${estArea??""}"></div>
+      <div class="stat"><span>Tin gần nhất</span><b>${fmtDist(h[0].dist)}</b></div></div></div>
+    <div class="est"><label for="areaIn">Ước tính cho lô của bạn</label>
+      <div class="unit"><input id="areaIn" type="number" min="1" inputmode="decimal" placeholder="${state.type==="o"?"Diện tích, vd 250":"Diện tích, vd 2000"}" value="${estArea??""}"><span>m²</span></div>
+      <output id="estOut">—</output></div>
+    <div class="card"><div class="listhead"><h2>Tin dùng để tính</h2><span>${h.length} tin, gần nhất trước</span></div>
     <div class="list">${h.map(x=>`<div class="item">
       <div class="t">${esc(x.t)}</div><div class="p">${fmtPpm(x.ppm)}/m²</div>
-      <div class="m">${fmtMoney(x.p)} · ${nf0.format(x.a)} m²${x.w?` · ngang ${nf1.format(x.w).replace(",0","")} m`:""}${x.tc?` · thổ cư ${x.tc} m²`:""}${x.r?` · ${esc(x.r)}`:""}<br>${esc(x.oc)} (nay: ${esc(x.ward)}) · cách ~${fmtDist(x.dist)} · đăng ${esc(x.d)}</div>
-      <div class="m" style="text-align:right">${x.u?`<a href="${esc(x.u)}" target="_blank" rel="noopener">Xem tin gốc</a><br>`:""}${esc(x.s)}</div></div>`).join("")}</div>`;
+      <div class="m">${fmtMoney(x.p)}, ${nf0.format(x.a)} m²${x.w?`, ngang ${nf1.format(x.w).replace(",0","")} m`:""}${x.tc?`, thổ cư ${x.tc} m²`:""}${x.r?`, ${esc(x.r)}`:""}<br>${esc(x.oc)} (nay ${esc(x.ward)}), cách ~${fmtDist(x.dist)}, đăng ${esc(x.d)}</div>
+      <div class="s">${x.u?`<a href="${esc(x.u)}" target="_blank" rel="noopener">Xem tin gốc</a><br>`:""}${esc(x.s)}</div></div>`).join("")}</div></div>`;
   box.innerHTML=html;
   const ai=$("#areaIn"), eo=$("#estOut");
-  const upd=()=>{const a=parseFloat(String(ai.value).replace(",","."));estArea=a>0?a:null;eo.textContent=a>0?(h.length>=3?`${fmtMoney(q1*a)} – ${fmtMoney(q3*a)}`:`~${fmtMoney(med*a)}`):"—"};
+  const upd=()=>{const a=parseFloat(String(ai.value).replace(",","."));estArea=a>0?a:null;
+    eo.innerHTML=a>0?(h.length>=3?`${fmtMoney(q1*a)} – ${fmtMoney(q3*a)}<small>theo khoảng phổ biến</small>`:`~${fmtMoney(med*a)}<small>theo giá trung vị</small>`):"—"};
   ai.oninput=upd; upd();
 }
 function renderPins(){
   const el=$("#pinList"); el.innerHTML="";
   pins.forEach((p,i)=>{
     const d=document.createElement("div");d.className="pin";d.tabIndex=0;d.setAttribute("aria-current",String(i===state.active));
-    d.innerHTML=`<span><b>${p.ex?"Ghim ví dụ":"Ghim "+(i+1)}</b> <span class="c">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</span></span><button type="button" aria-label="Xoá ghim">×</button>`;
+    d.innerHTML=`<span><b>${p.ex?"Ghim ví dụ":"Ghim "+(i+1)}</b> <span class="c">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</span></span><button type="button" aria-label="Xoá ghim">×</button>`;
     d.onclick=e=>{if(e.target.tagName==="BUTTON")return;state.active=i;map.panTo([p.lat,p.lng]);refresh()};
     d.onkeydown=e=>{if(e.key==="Enter")d.click()};
     d.querySelector("button").onclick=()=>{pins.splice(i,1);state.active=pins.length?pins.length-1:null;persist();refresh()};
     el.appendChild(d);
   });
-  const a=document.createElement("a");a.href="https://www.google.com/maps?q="+(pins[state.active]?pins[state.active].lat+","+pins[state.active].lng:"");a.target="_blank";a.rel="noopener";a.textContent="Mở ghim đang chọn trên Google Maps";a.style.fontSize=".86rem";
-  if(pins[state.active]) el.appendChild(a); else el.innerHTML='<p class="empty">Chưa có ghim nào.</p>';
+  const a=document.createElement("a");a.className="pinlink";a.href="https://www.google.com/maps?q="+(pins[state.active]?pins[state.active].lat+","+pins[state.active].lng:"");a.target="_blank";a.rel="noopener";a.textContent="Mở ghim đang chọn trên Google Maps";
+  if(pins[state.active]){const wrap=document.createElement("div");wrap.style.flexBasis="100%";wrap.appendChild(a);el.appendChild(wrap)} else el.innerHTML='<p class="empty">Chưa có ghim nào. Chạm vào bản đồ để thả ghim.</p>';
 }
 function renderCoverage(){
   const rows=WARDS.map(w=>({w,n:countBy[w.name]||0})).sort((a,b)=>b.n-a.n);
-  $("#cov").innerHTML=rows.filter(r=>r.n).map(r=>`<span>${wardLabel(r.w)}</span><span>${r.n} tin</span>`).join("")
-    +`<span style="grid-column:1/-1;color:var(--muted);margin-top:4px">Chưa có tin: ${rows.filter(r=>!r.n).map(r=>r.w.name).join(", ")}.</span>`;
+  const max=Math.max(1,...rows.map(r=>r.n)), none=rows.filter(r=>!r.n);
+  $("#cov").innerHTML=rows.filter(r=>r.n).map(r=>`<div class="r"><span>${wardLabel(r.w)}</span><i style="width:${(r.n/max*100).toFixed(1)}%"></i><b>${r.n}</b></div>`).join("")
+    +(none.length?`<p class="none"><b>Chưa có tin (${none.length}):</b> ${none.map(r=>r.w.name).join(", ")}.</p>`:"");
 }
 const FORM_PREFILL = "https://docs.google.com/forms/d/e/1FAIpQLScZxbGK0PeJKHOu4CEm0_CMphnRTAIofuCiuPLWxQymhnc0PQ/viewform?usp=pp_url&entry.1503623532=XAPHUONG&entry.1651322764=TOADO";
 function renderPost(){
   let el=$("#postBox"); const p=pins[state.active];
   if(!el){el=document.createElement("div");el.className="postbox";el.id="postBox";}
   if(!p||!FORM_PREFILL){el.hidden=true;el.innerHTML="";return}
-  const anchor=$("#result .est")||$("#result .stats");
+  const anchor=$("#result .est")||$("#result .readout");
   if(anchor) anchor.after(el); else $("#result").appendChild(el);
   const w=nearestWard(p), toado=p.lat.toFixed(6)+", "+p.lng.toFixed(6);
   const url=FORM_PREFILL.replace("TOADO",encodeURIComponent(toado)).replace("XAPHUONG",encodeURIComponent(wardLabel(w)));
-  el.innerHTML=`<a class="btn primary" href="${url}" target="_blank" rel="noopener">Đăng thêm tin giá đất khu vực này</a><br>Biết giá đất quanh ghim này? Gửi giúp để bản đồ chính xác hơn. Không cần ghi tên hay số điện thoại. Tin được duyệt và đưa lên mỗi tuần.`;
+  el.innerHTML=`<div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+    <h3>Bạn biết giá đất quanh ghim này?</h3>
+    <p>Gửi một tin giá đất để bản đồ chính xác hơn. Không cần ghi tên hay số điện thoại; tin được duyệt và đưa lên mỗi tuần.</p>
+    <a class="btn primary" href="${url}" target="_blank" rel="noopener">Đăng thêm tin giá đất khu vực này</a>`;
   el.hidden=false;
 }
 function refresh(){renderResult();renderPost();renderPins()}
