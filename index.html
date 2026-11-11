@@ -464,7 +464,7 @@ function renderResult(){
     <div class="list">${h.map(x=>`<div class="item">
       <div class="t">${esc(x.t)}</div><div class="p">${fmtPpm(x.ppm)}/m²</div>
       <div class="m">${fmtMoney(x.p)} · ${nf0.format(x.a)} m²${x.w?` · ngang ${nf1.format(x.w).replace(",0","")} m`:""}${x.tc?` · thổ cư ${x.tc} m²`:""}${x.r?` · ${esc(x.r)}`:""}<br>${esc(x.oc)} (nay: ${esc(x.ward)}) · cách ~${fmtDist(x.dist)} · đăng ${esc(x.d)}</div>
-      <div class="m" style="text-align:right"><a href="${esc(x.u)}" target="_blank" rel="noopener">Xem tin gốc</a><br>${esc(x.s)}</div></div>`).join("")}</div>`;
+      <div class="m" style="text-align:right">${x.u?`<a href="${esc(x.u)}" target="_blank" rel="noopener">Xem tin gốc</a><br>`:""}${esc(x.s)}</div></div>`).join("")}</div>`;
   box.innerHTML=html;
   const ai=$("#areaIn"), eo=$("#estOut");
   const upd=()=>{const a=parseFloat(String(ai.value).replace(",","."));estArea=a>0?a:null;eo.textContent=a>0?(h.length>=3?`${fmtMoney(q1*a)} – ${fmtMoney(q3*a)}`:`~${fmtMoney(med*a)}`):"—"};
